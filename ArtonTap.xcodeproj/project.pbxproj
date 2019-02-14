@@ -8,22 +8,24 @@
 
 /* Begin PBXBuildFile section */
 		CED137F12215BAD200C9B2F3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED137F02215BAD200C9B2F3 /* AppDelegate.swift */; };
-		CED137F32215BAD300C9B2F3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED137F22215BAD300C9B2F3 /* ViewController.swift */; };
+		CED137F32215BAD300C9B2F3 /* ArtCollectionTableviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED137F22215BAD300C9B2F3 /* ArtCollectionTableviewController.swift */; };
 		CED137F62215BAD300C9B2F3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CED137F42215BAD300C9B2F3 /* Main.storyboard */; };
 		CED137F92215BAD300C9B2F3 /* ArtonTap.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CED137F72215BAD300C9B2F3 /* ArtonTap.xcdatamodeld */; };
 		CED137FB2215BAD500C9B2F3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CED137FA2215BAD500C9B2F3 /* Assets.xcassets */; };
 		CED137FE2215BAD500C9B2F3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CED137FC2215BAD500C9B2F3 /* LaunchScreen.storyboard */; };
+		CED138062215EF3100C9B2F3 /* AddArtViewCellViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED138052215EF3100C9B2F3 /* AddArtViewCellViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		CED137ED2215BAD200C9B2F3 /* ArtonTap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArtonTap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CED137F02215BAD200C9B2F3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		CED137F22215BAD300C9B2F3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		CED137F22215BAD300C9B2F3 /* ArtCollectionTableviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtCollectionTableviewController.swift; sourceTree = "<group>"; };
 		CED137F52215BAD300C9B2F3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		CED137F82215BAD300C9B2F3 /* ArtonTap.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ArtonTap.xcdatamodel; sourceTree = "<group>"; };
 		CED137FA2215BAD500C9B2F3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CED137FD2215BAD500C9B2F3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CED137FF2215BAD500C9B2F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CED138052215EF3100C9B2F3 /* AddArtViewCellViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddArtViewCellViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +59,8 @@
 			isa = PBXGroup;
 			children = (
 				CED137F02215BAD200C9B2F3 /* AppDelegate.swift */,
-				CED137F22215BAD300C9B2F3 /* ViewController.swift */,
+				CED137F22215BAD300C9B2F3 /* ArtCollectionTableviewController.swift */,
+				CED138052215EF3100C9B2F3 /* AddArtViewCellViewController.swift */,
 				CED137F42215BAD300C9B2F3 /* Main.storyboard */,
 				CED137FA2215BAD500C9B2F3 /* Assets.xcassets */,
 				CED137FC2215BAD500C9B2F3 /* LaunchScreen.storyboard */,
@@ -139,8 +142,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				CED137F92215BAD300C9B2F3 /* ArtonTap.xcdatamodeld in Sources */,
-				CED137F32215BAD300C9B2F3 /* ViewController.swift in Sources */,
+				CED137F32215BAD300C9B2F3 /* ArtCollectionTableviewController.swift in Sources */,
 				CED137F12215BAD200C9B2F3 /* AppDelegate.swift in Sources */,
+				CED138062215EF3100C9B2F3 /* AddArtViewCellViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
