@@ -4,9 +4,10 @@
         <attribute name="artistName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="beerArt" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="nameOfBeer" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notes" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="whereDrank" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="BeerArt" positionX="-63" positionY="-18" width="128" height="105"/>
+        <element name="BeerArt" positionX="-63" positionY="-18" width="128" height="120"/>
     </elements>
 </model>

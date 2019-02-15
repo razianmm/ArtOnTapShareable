@@ -13,6 +13,8 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
     let imagePicker = UIImagePickerController()
     
     var pickedImage: UIImage?
+    
+    var artArray = [BeerArt]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
