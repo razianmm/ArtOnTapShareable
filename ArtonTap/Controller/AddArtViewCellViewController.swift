@@ -32,12 +32,6 @@ class AddArtViewCellViewController: UIViewController  {
         
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        if se
-        
-    }
-    
     @IBAction func addButtonPressed(_ sender: UIButton) {
         
         saveImage()
@@ -115,6 +109,20 @@ class AddArtViewCellViewController: UIViewController  {
             print("Error saving new beer art item: \(error)")
             
         }
+        
+        func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+            
+            if segue.identifier == "artAdded" {
+                
+                let destinationVC = segue.destination as! ArtCollectionTableViewController
+                
+                destinationVC.artArray.append(newBeer)
+                
+            }
+            
+        }
+        
+        performSegue(withIdentifier: "artAdded", sender: self)
         
     }
     
