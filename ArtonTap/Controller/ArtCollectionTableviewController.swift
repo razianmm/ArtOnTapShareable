@@ -17,9 +17,12 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
     
     var artArray = [BeerArt]()
     
+    var beerArt: BeerArt?
+    
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
@@ -30,6 +33,8 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         tableView.reloadData()
         
     }
+    
+    //MARK: - TableView Delegate Methods
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -51,13 +56,31 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        beerArt = artArray[indexPath.row]
+        
+        performSegue(withIdentifier: "artDetails", sender: self)
+        
+    }
+    
+    //MARK: - Data manipulation methods
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == "addArt" {
             
             let destinationVC = segue.destination as! AddArtViewCellViewController
-            
-//            destinationVC.artImageView?.image = pickedImage
         
             destinationVC.artToAdd = pickedImage
+            
+        } else if segue.identifier == "artDetails" {
+            
+            let destinationVC = segue.destination as! ArtDetailsViewController
+            
+            destinationVC.beerArt = beerArt!
+            
+        }
         
     }
 
@@ -79,6 +102,8 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         performSegue(withIdentifier: "addArt", sender: self)
         
     }
+    
+    //MARK: - Core Data functions
     
     func loadBeerArtArray() {
         

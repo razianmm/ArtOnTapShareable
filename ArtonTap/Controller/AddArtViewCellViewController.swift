@@ -10,12 +10,14 @@ import UIKit
 
 class AddArtViewCellViewController: UIViewController  {
     
+    var fileLocation: String?
+    
     var artToAdd: UIImage?
+    
     @IBOutlet weak var nameOfBeer: UITextField!
     @IBOutlet weak var location: UITextField!
     @IBOutlet weak var artistName: UITextField!
     @IBOutlet weak var notesOnBeer: UITextView!
-    
     @IBOutlet weak var artImageView: UIImageView!
     
     let documentsPath = FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask)
@@ -44,9 +46,9 @@ class AddArtViewCellViewController: UIViewController  {
 
         if nameOfBeer.text?.isEmpty == false {
 
-            let imageFileName = nameOfBeer.text! + ".png"
+            let imageFileName = nameOfBeer.text! + ".jpeg"
             
-            let imageToStore = artToAdd!.pngData()
+            let imageToStore = artToAdd!.jpegData(compressionQuality: 0.5)
 
             let newDocument = documentsPath[0].appendingPathComponent(imageFileName)
 
@@ -84,17 +86,25 @@ class AddArtViewCellViewController: UIViewController  {
     
     func addBeer() {
         
-        let newBeer = BeerArt(context: context)
+            let newBeer = BeerArt(context: context)
 
-        newBeer.nameOfBeer = nameOfBeer.text
+            newBeer.nameOfBeer = nameOfBeer.text
 
-        newBeer.whereDrank = location.text
+            newBeer.whereDrank = location.text
 
-        newBeer.artistName = artistName.text
+            newBeer.artistName = artistName.text
 
-        newBeer.notes = notesOnBeer.text
+            newBeer.notes = notesOnBeer.text
         
-        newBeer.beerArt = documentsPath[0].appendingPathComponent("\(nameOfBeer.text!)" + ".png").path
+//        newBeer.beerArt = documentsPath[0].appendingPathComponent("\(nameOfBeer.text!)" + ".jpeg").path
+        
+        if let fileLocation = nameOfBeer.text {
+        
+            newBeer.beerArt = "\(fileLocation)" + ".jpeg"
+            
+            print(newBeer)
+            
+        }
        
         do {
             
@@ -123,6 +133,10 @@ class AddArtViewCellViewController: UIViewController  {
         }
         
         performSegue(withIdentifier: "artAdded", sender: self)
+        
+        
+        
+        
         
     }
     

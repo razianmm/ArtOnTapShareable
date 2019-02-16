@@ -9,13 +9,50 @@
 import UIKit
 
 class ArtDetailsViewController: UIViewController {
-
+    
+    var beerArt: BeerArt?
+    
+     let documentsPath = FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask)
+    
+    @IBOutlet weak var artView: UIImageView!
+    @IBOutlet weak var beerName: UILabel!
+    @IBOutlet weak var whereDrank: UILabel!
+    @IBOutlet weak var artistName: UILabel!
+    @IBOutlet weak var beerNotes: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let beerArtObject = beerArt {
+        
+            let imageURL = documentsPath[0].appendingPathComponent(beerArtObject.beerArt!)
+            
+            print(imageURL)
+            
+            do {
+            
+                let data = try Data(contentsOf: imageURL)
+                
+                let image = UIImage(data: data)
+                
+                artView.image = image
+                
+            } catch {
+                
+                print("Error loading image data: \(error)")
+                
+            }
 
+            beerName.text = beerArtObject.nameOfBeer
+            whereDrank.text = beerArtObject.whereDrank
+            artistName.text = beerArtObject.artistName
+            beerNotes.text = beerArtObject.notes
+                
+            }
+        
+        
         // Do any additional setup after loading the view.
-    }
-    
+}
 
     /*
     // MARK: - Navigation
