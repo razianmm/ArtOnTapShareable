@@ -19,6 +19,8 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
     
     var beerArt: BeerArt?
     
+    let documentsPath = FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask)
+    
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
     override func viewDidLoad() {
@@ -27,6 +29,8 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         // Do any additional setup after loading the view, typically from a nib.
         
         imagePicker.delegate = self
+        
+        self.navigationItem.title = "My Beer Art Collection"
         
         loadBeerArtArray()
         
@@ -51,6 +55,26 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         let cell = tableView.dequeueReusableCell(withIdentifier: "artCell", for: indexPath)
         
         cell.textLabel?.text = artArray[indexPath.row].nameOfBeer
+        
+        let imageURL = documentsPath[0].appendingPathComponent(artArray[indexPath.row].beerArt!)
+        
+        do {
+            
+            let data = try Data(contentsOf: imageURL)
+            
+            let image = UIImage(data: data)
+            
+            let imageView = UIImageView(image: image)
+            
+            imageView.contentMode = .scaleAspectFill
+            
+            cell.backgroundView = imageView
+            
+        } catch {
+            
+            print("\(error)")
+            
+        }
         
         return cell
         

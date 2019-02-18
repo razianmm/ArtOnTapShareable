@@ -58,7 +58,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="f8X-0A-ixD">
-                                <rect key="frame" x="0.0" y="20" width="375" height="319"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="275"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4uC-fl-L0n">
                                 <rect key="frame" x="0.0" y="347" width="375" height="21"/>
@@ -133,7 +133,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hZo-RN-mER">
-                                <rect key="frame" x="0.0" y="20" width="375" height="319"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="275"/>
                             </imageView>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AFQ-Nv-Gda">
                                 <rect key="frame" x="0.0" y="347" width="375" height="30"/>
@@ -237,6 +237,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="FjF-St-Vwr"/>
+        <segue reference="58P-gc-COs"/>
     </inferredMetricsTieBreakers>
 </document>
