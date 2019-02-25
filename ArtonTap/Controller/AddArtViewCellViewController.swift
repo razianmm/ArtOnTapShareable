@@ -26,6 +26,8 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
     
     var userCoordinate: CLLocationCoordinate2D?
     
+    var locationName: String?
+    
     @IBOutlet weak var nameOfBeer: UITextField!
     @IBOutlet weak var location: UITextField!
     @IBOutlet weak var artistName: UITextField!
@@ -41,6 +43,12 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
 
         // Do any additional setup after loading the view.
         artImageView.image = artToAdd
+        
+        if locationName != nil {
+            
+            location.text = locationName
+            
+        }
         
 //        let documentsPath = files.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask)
         

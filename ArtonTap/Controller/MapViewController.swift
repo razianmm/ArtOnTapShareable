@@ -32,6 +32,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UITableViewDelegat
     
     var selectedPin: MKPlacemark?
     
+    let geoCoder = CLGeocoder()
+    
+    var locationTitle: String?
+    
 //    var pinView: MKAnnotationView?
 
     override func viewDidLoad() {
@@ -43,19 +47,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UITableViewDelegat
         
         mapView.delegate = self
         
-        let region = MKCoordinateRegion.init(center: userCoordinate!, latitudinalMeters: 5000, longitudinalMeters: 5000)
-        
-        mapView.region = region
-        
-        let annotation = MKPointAnnotation()
-        
-        annotation.coordinate = userCoordinate!
-        
-        annotation.title = "You Are Here!"
-        
-        annotation.subtitle = "Cheers"
-        
-        mapView.addAnnotation(annotation)
+        createUserLocationPin()
         
         //Code for the search table:
         
@@ -96,6 +88,14 @@ class MapViewController: UIViewController, MKMapViewDelegate, UITableViewDelegat
             annotationView.animatesDrop = true
             annotationView.canShowCallout = true
             
+            let button = UIButton(type: .contactAdd)
+            
+            button.addTarget(self, action: #selector(addLocation), for: .touchUpInside)
+            
+            annotationView.rightCalloutAccessoryView = button
+            
+            locationTitle = annotation.title!
+            
             return annotationView
             
         } else {
@@ -105,6 +105,26 @@ class MapViewController: UIViewController, MKMapViewDelegate, UITableViewDelegat
         }
         
     }
+    
+    @objc func addLocation(sender: UIButton) {
+        
+//        performSegue(withIdentifier: "addLocation", sender: self)
+    
+        let previousView = self.navigationController?.viewControllers[1] as! AddArtViewCellViewController
+        
+        previousView.location.text = locationTitle
+        
+        self.navigationController?.popViewController(animated: true)
+        
+    }
+    
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//
+//        let destinationVC = segue.destination as! AddArtViewCellViewController
+//
+//        destinationVC.locationName = locationTitle
+//
+//    }
     
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, didChange newState: MKAnnotationView.DragState, fromOldState oldState: MKAnnotationView.DragState) {
         
@@ -118,13 +138,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, UITableViewDelegat
                     
                         newLocation = CLLocation(latitude: userLatitude, longitude: userLongitude)
                     
-                        let geoCoder = CLGeocoder()
-                    
                         geoCoder.reverseGeocodeLocation(newLocation!) { (placemarks, error) in
                         
                         let placeName = placemarks?[0].name
                         
                         draggedView.title = placeName
+                            
+                        draggedView.subtitle = ""
                         
                         }
                     
@@ -147,7 +167,44 @@ class MapViewController: UIViewController, MKMapViewDelegate, UITableViewDelegat
         // Pass the selected object to the new view controller.
     }
     */
-
+    @IBAction func userLocationButtonPressed(_ sender: UIButton) {
+        
+        mapView.removeAnnotations(mapView.annotations)
+        
+        createUserLocationPin()
+        
+    }
+    
+    func createUserLocationPin() {
+        
+        let annotation = MKPointAnnotation()
+        
+        annotation.coordinate = userCoordinate!
+        
+//        annotation.title = "You Are Here!"
+        
+        let userLocation = CLLocation(latitude: userCoordinate!.latitude, longitude: userCoordinate!.longitude)
+        
+        geoCoder.reverseGeocodeLocation(userLocation) { (placemarks, error) in
+            
+            let placeName = placemarks?[0].name
+            
+            annotation.title = placeName ?? "You are here!"
+            
+            self.locationTitle = annotation.title
+            
+        }
+        
+        mapView.addAnnotation(annotation)
+        
+        let span = MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+        
+        let region = MKCoordinateRegion(center: annotation.coordinate, span: span)
+        
+        mapView.setRegion(region, animated: true)
+        
+    }
+    
 }
 
 extension MapViewController: HandleMapSearch {
@@ -166,7 +223,7 @@ extension MapViewController: HandleMapSearch {
         
         if let city = placemark.locality, let state = placemark.administrativeArea {
             
-            annotation.subtitle = "(city) (state)"
+            annotation.subtitle = "\(city) \(state)"
             
         }
         
@@ -178,6 +235,31 @@ extension MapViewController: HandleMapSearch {
         
         mapView.setRegion(region, animated: true)
     }
+    
+    func parseAddress(selectedItem: MKPlacemark) -> String {
+        // put a space between "4" and "Melrose Place"
+        let firstSpace = (selectedItem.subThoroughfare != nil && selectedItem.thoroughfare != nil) ? " " : ""
+        // put a comma between street and city/state
+        let comma = (selectedItem.subThoroughfare != nil || selectedItem.thoroughfare != nil) && (selectedItem.subAdministrativeArea != nil || selectedItem.administrativeArea != nil) ? ", " : ""
+        // put a space between "Washington" and "DC"
+        let secondSpace = (selectedItem.subAdministrativeArea != nil && selectedItem.administrativeArea != nil) ? " " : ""
+        let addressLine = String(
+            format:"%@%@%@%@%@%@%@",
+            // street number
+            selectedItem.subThoroughfare ?? "",
+            firstSpace,
+            // street name
+            selectedItem.thoroughfare ?? "",
+            comma,
+            // city
+            selectedItem.locality ?? "",
+            secondSpace,
+            // state
+            selectedItem.administrativeArea ?? ""
+        )
+        return addressLine
+    }
+    
 }
 
 

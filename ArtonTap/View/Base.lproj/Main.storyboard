@@ -141,8 +141,8 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Where you drank it..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qqK-Uu-E2T">
-                                <rect key="frame" x="0.0" y="385" width="211" height="30"/>
+                            <textField opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Where you drank it..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qqK-Uu-E2T">
+                                <rect key="frame" x="0.0" y="385" width="275" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -184,12 +184,6 @@
                                     <action selector="mapButtonPressed:" destination="vx7-Tx-hxR" eventType="touchUpInside" id="7an-nh-DGU"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="OR" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jlr-hA-Ltr">
-                                <rect key="frame" x="234" y="390" width="23.5" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -206,22 +200,19 @@
                             <constraint firstItem="AtF-p1-hVd" firstAttribute="top" secondItem="AFQ-Nv-Gda" secondAttribute="bottom" constant="10" id="OkS-gC-fUi"/>
                             <constraint firstItem="DMN-Ia-3gn" firstAttribute="top" secondItem="qqK-Uu-E2T" secondAttribute="bottom" constant="8" id="P2E-b8-bIB"/>
                             <constraint firstItem="qqK-Uu-E2T" firstAttribute="leading" secondItem="obh-ec-qqH" secondAttribute="leading" id="P2y-ye-i6n"/>
-                            <constraint firstItem="AtF-p1-hVd" firstAttribute="leading" secondItem="Jlr-hA-Ltr" secondAttribute="trailing" constant="25.5" id="TPQ-6s-doE"/>
                             <constraint firstItem="DMN-Ia-3gn" firstAttribute="trailing" secondItem="obh-ec-qqH" secondAttribute="trailing" id="a7L-4p-T48"/>
                             <constraint firstItem="AFQ-Nv-Gda" firstAttribute="trailing" secondItem="obh-ec-qqH" secondAttribute="trailing" id="azS-Na-kYk"/>
                             <constraint firstItem="DMN-Ia-3gn" firstAttribute="leading" secondItem="obh-ec-qqH" secondAttribute="leading" id="b7c-RI-Jwa"/>
                             <constraint firstItem="hZo-RN-mER" firstAttribute="leading" secondItem="obh-ec-qqH" secondAttribute="leading" id="eVs-P5-D5E"/>
                             <constraint firstItem="DMN-Ia-3gn" firstAttribute="top" secondItem="AtF-p1-hVd" secondAttribute="bottom" constant="6" id="fgo-g5-Ii8"/>
-                            <constraint firstItem="Jlr-hA-Ltr" firstAttribute="top" secondItem="XYC-MQ-sva" secondAttribute="bottom" constant="13" id="iZn-dd-7hX"/>
                             <constraint firstItem="h48-Lj-Dc9" firstAttribute="trailing" secondItem="obh-ec-qqH" secondAttribute="trailing" id="jxg-Dp-8OK"/>
-                            <constraint firstItem="DMN-Ia-3gn" firstAttribute="top" secondItem="Jlr-hA-Ltr" secondAttribute="bottom" constant="12" id="kcf-G4-qMu"/>
                             <constraint firstItem="h48-Lj-Dc9" firstAttribute="leading" secondItem="obh-ec-qqH" secondAttribute="leading" id="kxh-qS-sWA"/>
                             <constraint firstItem="XYC-MQ-sva" firstAttribute="leading" secondItem="obh-ec-qqH" secondAttribute="leading" id="lbz-Aq-8CY"/>
                             <constraint firstItem="h48-Lj-Dc9" firstAttribute="top" secondItem="DMN-Ia-3gn" secondAttribute="bottom" constant="8" id="nRp-iI-CxV"/>
                             <constraint firstItem="AFQ-Nv-Gda" firstAttribute="leading" secondItem="obh-ec-qqH" secondAttribute="leading" id="pWP-rF-AB0"/>
-                            <constraint firstItem="Jlr-hA-Ltr" firstAttribute="leading" secondItem="qqK-Uu-E2T" secondAttribute="trailing" constant="23" id="q9x-V9-sNU"/>
                             <constraint firstItem="obh-ec-qqH" firstAttribute="bottom" secondItem="M3O-VF-OVh" secondAttribute="bottom" constant="20" id="tiS-k3-f90"/>
                             <constraint firstItem="obh-ec-qqH" firstAttribute="trailing" secondItem="AtF-p1-hVd" secondAttribute="trailing" constant="8" id="wQf-4c-o7m"/>
+                            <constraint firstItem="AtF-p1-hVd" firstAttribute="leading" secondItem="qqK-Uu-E2T" secondAttribute="trailing" constant="8" id="yhP-Gn-tha"/>
                             <constraint firstItem="M3O-VF-OVh" firstAttribute="leading" secondItem="obh-ec-qqH" secondAttribute="leading" constant="164" id="zOI-Uk-5LL"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="obh-ec-qqH"/>
@@ -251,18 +242,28 @@
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="pUd-g7-Jg2">
                                 <rect key="frame" x="0.0" y="20" width="375" height="647"/>
                             </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xop-pZ-L2b">
+                                <rect key="frame" x="272" y="637" width="87" height="30"/>
+                                <state key="normal" title="Where Am I?"/>
+                                <connections>
+                                    <action selector="userLocationButtonPressed:" destination="hoa-Pd-c9B" eventType="touchUpInside" id="Q5A-fm-d5T"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="xop-pZ-L2b" firstAttribute="bottom" secondItem="h2R-T8-X4t" secondAttribute="bottom" id="0zz-Cp-xg6"/>
                             <constraint firstItem="pUd-g7-Jg2" firstAttribute="leading" secondItem="h2R-T8-X4t" secondAttribute="leading" id="FM4-l3-bFd"/>
                             <constraint firstItem="pUd-g7-Jg2" firstAttribute="bottom" secondItem="h2R-T8-X4t" secondAttribute="bottom" id="Fql-nP-9A8"/>
                             <constraint firstItem="pUd-g7-Jg2" firstAttribute="top" secondItem="h2R-T8-X4t" secondAttribute="top" id="TxS-OQ-lye"/>
+                            <constraint firstItem="h2R-T8-X4t" firstAttribute="trailing" secondItem="xop-pZ-L2b" secondAttribute="trailing" constant="16" id="hbL-yz-7Cr"/>
                             <constraint firstItem="pUd-g7-Jg2" firstAttribute="trailing" secondItem="h2R-T8-X4t" secondAttribute="trailing" id="wJj-4H-qS6"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="h2R-T8-X4t"/>
                     </view>
                     <connections>
                         <outlet property="mapView" destination="pUd-g7-Jg2" id="4lm-i2-fe7"/>
+                        <segue destination="vx7-Tx-hxR" kind="show" identifier="addLocation" id="A2j-TV-vGb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BaP-s6-wQS" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -333,6 +334,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="FAZ-Ss-5dA"/>
+        <segue reference="A2j-TV-vGb"/>
         <segue reference="FjF-St-Vwr"/>
     </inferredMetricsTieBreakers>
 </document>
