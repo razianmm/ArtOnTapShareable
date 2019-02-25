@@ -8,12 +8,23 @@
 
 import UIKit
 import MapKit
+import SVProgressHUD
+import CoreLocation
+import MapKit
 
-class AddArtViewCellViewController: UIViewController  {
+class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate  {
+    
+//    var didFindLocation: Bool?
     
     var fileLocation: String?
     
     var artToAdd: UIImage?
+    
+    let locationManager = CLLocationManager()
+    
+    var newBeer: BeerArt?
+    
+    var userCoordinate: CLLocationCoordinate2D?
     
     @IBOutlet weak var nameOfBeer: UITextField!
     @IBOutlet weak var location: UITextField!
@@ -36,6 +47,8 @@ class AddArtViewCellViewController: UIViewController  {
     }
     
     @IBAction func addButtonPressed(_ sender: UIButton) {
+        
+//        SVProgressHUD.show()
         
         saveImage()
         
@@ -87,21 +100,21 @@ class AddArtViewCellViewController: UIViewController  {
     
     func addBeer() {
         
-            let newBeer = BeerArt(context: context)
+            newBeer = BeerArt(context: context)
 
-            newBeer.nameOfBeer = nameOfBeer.text
+            newBeer?.nameOfBeer = nameOfBeer.text
 
-            newBeer.whereDrank = location.text
+            newBeer?.whereDrank = location.text
 
-            newBeer.artistName = artistName.text
+            newBeer?.artistName = artistName.text
 
-            newBeer.notes = notesOnBeer.text
+            newBeer?.notes = notesOnBeer.text
         
 //        newBeer.beerArt = documentsPath[0].appendingPathComponent("\(nameOfBeer.text!)" + ".jpeg").path
         
         if let fileLocation = nameOfBeer.text {
         
-            newBeer.beerArt = "\(fileLocation)" + ".jpeg"
+            newBeer?.beerArt = "\(fileLocation)" + ".jpeg"
             
             print(newBeer)
             
@@ -121,25 +134,92 @@ class AddArtViewCellViewController: UIViewController  {
             
         }
         
-        func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-            
-            if segue.identifier == "artAdded" {
-                
-                let destinationVC = segue.destination as! ArtCollectionTableViewController
-                
-                destinationVC.artArray.append(newBeer)
-                
-            }
-            
-        }
         
         performSegue(withIdentifier: "artAdded", sender: self)
         
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        
+        if segue.identifier == "artAdded" {
+            
+            let destinationVC = segue.destination as! ArtCollectionTableViewController
+            
+            if let beerToAdd = newBeer {
+            
+            destinationVC.artArray.append(beerToAdd)
+                
+            }
+            
+        } else if segue.identifier == "showMap" {
+            
+            let destinationVC = segue.destination as! MapViewController
+            
+            destinationVC.userCoordinate = userCoordinate
+            
+        }
         
         
     }
+    
+    @IBAction func mapButtonPressed(_ sender: UIButton) {
+        
+        
+        switch CLLocationManager.authorizationStatus() {
+            
+        case .notDetermined:
+        locationManager.requestWhenInUseAuthorization()
+        break
+            
+        case .denied, .restricted:
+            
+            let locationAlert = UIAlertController(title: "Location services disabled or restricted", message: "Please enable location services for this app to use this feature", preferredStyle: .alert)
+            
+            let action = UIAlertAction(title: "OK", style: .default) { (UIAlertAction) in
+                
+                self.dismiss(animated: true, completion: nil)
+                
+            }
+            
+            locationAlert.addAction(action)
+            
+            present(locationAlert, animated: true, completion: nil)
+            
+            break
+            
+        case .authorizedWhenInUse, .authorizedAlways:
+            
+            getUserLocation()
+            
+            break
+        
+        }
+        
+        
+    }
+    
+    func getUserLocation() {
+        
+        locationManager.delegate = self
+        
+        locationManager.startUpdatingLocation()
+        
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        locationManager.stopUpdatingLocation()
+        
+        locationManager.delegate = nil
+        
+        print("Did update locations")
+        
+        userCoordinate = locations[0].coordinate
+        
+        performSegue(withIdentifier: "showMap", sender: self)
+        
+    }
+    
     
     /*
     // MARK: - Navigation

@@ -110,8 +110,16 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
 
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         
+        if UIImagePickerController.isSourceTypeAvailable(.camera) == true {
+            
+        imagePicker.sourceType = .camera
+            
+        } else {
+        
         imagePicker.sourceType = .photoLibrary
         imagePicker.allowsEditing = false
+        
+        }
         
         present(imagePicker, animated: true, completion: nil)
         
