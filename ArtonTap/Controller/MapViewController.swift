@@ -22,34 +22,28 @@ class MapViewController: UIViewController, MKMapViewDelegate, UITableViewDelegat
     
     @IBOutlet weak var mapView: MKMapView!
     
-    var userLocations = [UserLocations]()
+    let geoCoder = CLGeocoder()
     
     var userPin: UserLocations?
     
     var userCoordinate: CLLocationCoordinate2D?
     
+    var whereDrankCoordinate = CLLocationCoordinate2DMake(0, 0)
+    
     var newLocation: CLLocation?
     
-    var selectedPin: MKPlacemark?
-    
-    let geoCoder = CLGeocoder()
-    
-    var locationTitle: String?
-    
-//    var pinView: MKAnnotationView?
+    var locationTitle: String = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         
-//        print(userCoordinate)
-        
         mapView.delegate = self
         
         createUserLocationPin()
         
-        //Code for the search table:
+        //MARK: - Search bar methods
         
         let locationSearchTable = storyboard!.instantiateViewController(withIdentifier: "LocationSearchTable") as! SearchTableViewController
         
@@ -60,6 +54,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, UITableViewDelegat
         searchController = UISearchController(searchResultsController: locationSearchTable)
         
         searchController?.searchResultsUpdater = locationSearchTable
+        
+        //Creating the search bar and configuring its display
         
         let searchBar = searchController!.searchBar
         
@@ -77,122 +73,33 @@ class MapViewController: UIViewController, MKMapViewDelegate, UITableViewDelegat
         
     }
     
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        
-        if annotation is MKPointAnnotation {
-            
-            let annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "myUserPin")
-            
-            annotationView.pinTintColor = UIColor.blue
-            annotationView.isDraggable = true
-            annotationView.animatesDrop = true
-            annotationView.canShowCallout = true
-            
-            let button = UIButton(type: .contactAdd)
-            
-            button.addTarget(self, action: #selector(addLocation), for: .touchUpInside)
-            
-            annotationView.rightCalloutAccessoryView = button
-            
-            locationTitle = annotation.title!
-            
-            return annotationView
-            
-        } else {
-        
-            return nil
-            
-        }
-        
-    }
     
-    @objc func addLocation(sender: UIButton) {
-        
-//        performSegue(withIdentifier: "addLocation", sender: self)
-    
-        let previousView = self.navigationController?.viewControllers[1] as! AddArtViewCellViewController
-        
-        previousView.location.text = locationTitle
-        
-        self.navigationController?.popViewController(animated: true)
-        
-    }
-    
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//
-//        let destinationVC = segue.destination as! AddArtViewCellViewController
-//
-//        destinationVC.locationName = locationTitle
-//
-//    }
-    
-    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, didChange newState: MKAnnotationView.DragState, fromOldState oldState: MKAnnotationView.DragState) {
-        
-        let draggedView = view.annotation as! MKPointAnnotation
-        
-            if newState == .none {
-            
-                if let userLatitude = view.annotation?.coordinate.latitude {
-                
-                    if let userLongitude = view.annotation?.coordinate.longitude {
-                    
-                        newLocation = CLLocation(latitude: userLatitude, longitude: userLongitude)
-                    
-                        geoCoder.reverseGeocodeLocation(newLocation!) { (placemarks, error) in
-                        
-                        let placeName = placemarks?[0].name
-                        
-                        draggedView.title = placeName
-                            
-                        draggedView.subtitle = ""
-                        
-                        }
-                    
-                    }
-                
-                }
-            
-            }
-        
-    }
-
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-    @IBAction func userLocationButtonPressed(_ sender: UIButton) {
-        
-        mapView.removeAnnotations(mapView.annotations)
-        
-        createUserLocationPin()
-        
-    }
+    //MARK: - Create user location pin and reset to user location methods
     
     func createUserLocationPin() {
         
         let annotation = MKPointAnnotation()
         
-        annotation.coordinate = userCoordinate!
+        if let userCoordinate = userCoordinate {
         
-//        annotation.title = "You Are Here!"
+            annotation.coordinate = userCoordinate
+            
+            let userLocation = CLLocation(latitude: userCoordinate.latitude, longitude: userCoordinate.longitude)
+            
+            geoCoder.reverseGeocodeLocation(userLocation) { (placemarks, error) in
+                
+                if let placeName = placemarks?[0].name {
+                
+                    annotation.title = placeName
+                
+                    self.locationTitle = placeName
+                    
+                    print(self.locationTitle)
+                
+                }
+                
+            }
         
-        let userLocation = CLLocation(latitude: userCoordinate!.latitude, longitude: userCoordinate!.longitude)
-        
-        geoCoder.reverseGeocodeLocation(userLocation) { (placemarks, error) in
-            
-            let placeName = placemarks?[0].name
-            
-            annotation.title = placeName ?? "You are here!"
-            
-            self.locationTitle = annotation.title
-            
         }
         
         mapView.addAnnotation(annotation)
@@ -205,13 +112,102 @@ class MapViewController: UIViewController, MKMapViewDelegate, UITableViewDelegat
         
     }
     
+    @IBAction func userLocationButtonPressed(_ sender: UIButton) {
+        
+        mapView.removeAnnotations(mapView.annotations)
+        
+        createUserLocationPin()
+        
+    }
+    
+    //MARK: - Methods to create annotation views and add location
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        
+        if annotation is MKPointAnnotation {
+            
+            whereDrankCoordinate = annotation.coordinate
+            
+            print(whereDrankCoordinate)
+            
+            let annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "myUserPin")
+            
+            annotationView.pinTintColor = UIColor.blue
+            annotationView.isDraggable = true
+            annotationView.animatesDrop = true
+            annotationView.canShowCallout = true
+            annotationView.isSelected = true
+            
+            let button = UIButton(type: .contactAdd)
+            
+            button.addTarget(self, action: #selector(addLocation), for: .touchUpInside)
+            
+            annotationView.rightCalloutAccessoryView = button
+            
+            return annotationView
+            
+        } else {
+            
+            return nil
+            
+        }
+        
+    }
+    
+    @objc func addLocation(sender: UIButton) {
+        
+        performSegue(withIdentifier: "unwindToAddArt", sender: self)
+        
+    }
+    
+    //MARK: - Method to drag annotation pins
+    
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, didChange newState: MKAnnotationView.DragState, fromOldState oldState: MKAnnotationView.DragState) {
+        
+        let draggedView = view.annotation as! MKPointAnnotation
+        
+        if newState == .none {
+            
+            if let userLatitude = view.annotation?.coordinate.latitude {
+                
+                if let userLongitude = view.annotation?.coordinate.longitude {
+                    
+                    newLocation = CLLocation(latitude: userLatitude, longitude: userLongitude)
+                    
+                    geoCoder.reverseGeocodeLocation(newLocation!) { (placemarks, error) in
+                        
+                        if let placeName = placemarks?[0].name {
+                        
+                            draggedView.title = placeName
+                            
+                            self.locationTitle = placeName
+                            
+                            self.whereDrankCoordinate = draggedView.coordinate
+                            
+                            print(self.locationTitle)
+                            
+                            draggedView.subtitle = ""
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
+            }
+            
+        }
+        
+    }
+    
 }
+
+//MARK: - Map Search delegate methods
 
 extension MapViewController: HandleMapSearch {
     
     func dropPinZoomIn(placemark: MKPlacemark) {
-        // cache the pin
-        selectedPin = placemark
+        
         // clear existing pins
         mapView.removeAnnotations(mapView.annotations)
         
@@ -219,7 +215,15 @@ extension MapViewController: HandleMapSearch {
         
         annotation.coordinate = placemark.coordinate
         
-        annotation.title = placemark.name
+        if let name = placemark.name {
+        
+            annotation.title = name
+            
+            self.locationTitle = name
+            
+            print(self.locationTitle)
+            
+        }
         
         if let city = placemark.locality, let state = placemark.administrativeArea {
             
@@ -234,30 +238,6 @@ extension MapViewController: HandleMapSearch {
         let region = MKCoordinateRegion(center: placemark.coordinate, span: span)
         
         mapView.setRegion(region, animated: true)
-    }
-    
-    func parseAddress(selectedItem: MKPlacemark) -> String {
-        // put a space between "4" and "Melrose Place"
-        let firstSpace = (selectedItem.subThoroughfare != nil && selectedItem.thoroughfare != nil) ? " " : ""
-        // put a comma between street and city/state
-        let comma = (selectedItem.subThoroughfare != nil || selectedItem.thoroughfare != nil) && (selectedItem.subAdministrativeArea != nil || selectedItem.administrativeArea != nil) ? ", " : ""
-        // put a space between "Washington" and "DC"
-        let secondSpace = (selectedItem.subAdministrativeArea != nil && selectedItem.administrativeArea != nil) ? " " : ""
-        let addressLine = String(
-            format:"%@%@%@%@%@%@%@",
-            // street number
-            selectedItem.subThoroughfare ?? "",
-            firstSpace,
-            // street name
-            selectedItem.thoroughfare ?? "",
-            comma,
-            // city
-            selectedItem.locality ?? "",
-            secondSpace,
-            // state
-            selectedItem.administrativeArea ?? ""
-        )
-        return addressLine
     }
     
 }

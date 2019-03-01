@@ -6,8 +6,10 @@
         <attribute name="nameOfBeer" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notes" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="whereDrank" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="whereLatitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="whereLongitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
     </entity>
     <elements>
-        <element name="BeerArt" positionX="-63" positionY="-18" width="128" height="120"/>
+        <element name="BeerArt" positionX="-63" positionY="-18" width="128" height="150"/>
     </elements>
 </model>

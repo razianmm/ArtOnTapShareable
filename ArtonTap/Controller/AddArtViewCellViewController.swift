@@ -12,19 +12,23 @@ import SVProgressHUD
 import CoreLocation
 import MapKit
 
-class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate  {
+class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate {
     
-//    var didFindLocation: Bool?
+    var newBeer: BeerArt?
+    
+    // Variables related to saving beer art image
     
     var fileLocation: String?
     
     var artToAdd: UIImage?
     
+    // Variables related to finding the user's location
+    
     let locationManager = CLLocationManager()
     
-    var newBeer: BeerArt?
-    
     var userCoordinate: CLLocationCoordinate2D?
+    
+    var whereDrankCoordinate: CLLocationCoordinate2D?
     
     var locationName: String?
     
@@ -40,29 +44,22 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        
+        print("view loaded")
+        
         artImageView.image = artToAdd
-        
-        if locationName != nil {
-            
-            location.text = locationName
-            
-        }
-        
-//        let documentsPath = files.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask)
         
     }
     
     @IBAction func addButtonPressed(_ sender: UIButton) {
-        
-//        SVProgressHUD.show()
         
         saveImage()
         
         addBeer()
         
     }
+    
+    //MARK: - Save art image method
     
     func saveImage() {
 
@@ -79,7 +76,7 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
                 try imageToStore?.write(to: newDocument)
                 
                 print("Image saved successfully")
-                print(newDocument)
+//                print(newDocument)
 
             } catch {
 
@@ -89,7 +86,7 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
 
         } else {
 
-            let alert = UIAlertController(title: "No name found", message: "Please give this beer a name before saving it", preferredStyle: .alert)
+            let alert = UIAlertController(title: "No name found", message: "Please give this beer art a name before saving it", preferredStyle: .alert)
             
             let action = UIAlertAction(title: "OK", style: .default) { (UIAlertAction) in
                 
@@ -106,6 +103,8 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
         
     }
     
+    //MARK: - Add beer art method
+    
     func addBeer() {
         
             newBeer = BeerArt(context: context)
@@ -118,13 +117,21 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
 
             newBeer?.notes = notesOnBeer.text
         
-//        newBeer.beerArt = documentsPath[0].appendingPathComponent("\(nameOfBeer.text!)" + ".jpeg").path
+        if let latitude = whereDrankCoordinate?.latitude {
+            
+            if let longitude = whereDrankCoordinate?.longitude {
+                
+                newBeer?.whereLatitude = latitude
+                
+                newBeer?.whereLongitude = longitude
+                
+            }
+            
+        }
         
         if let fileLocation = nameOfBeer.text {
         
             newBeer?.beerArt = "\(fileLocation)" + ".jpeg"
-            
-            print(newBeer)
             
         }
        
@@ -133,8 +140,6 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
             try context.save()
             
             print("New beer art item saved successfuly")
-            
-            print(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last! as String)
             
         } catch {
             
@@ -146,6 +151,8 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
         performSegue(withIdentifier: "artAdded", sender: self)
         
     }
+    
+    //MARK: - Prepare for segue methods
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
@@ -170,8 +177,21 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
         
     }
     
-    @IBAction func mapButtonPressed(_ sender: UIButton) {
+    //MARK: - Unwind segue method
+    
+    @IBAction func unwindToAddArtView(sender: UIStoryboardSegue) {
         
+        let sourceVC = sender.source as! MapViewController
+        
+        whereDrankCoordinate = sourceVC.whereDrankCoordinate
+        
+        location.text = sourceVC.locationTitle
+    
+    }
+    
+    //MARK: - Show map and user location methods
+    
+    @IBAction func mapButtonPressed(_ sender: UIButton) {
         
         switch CLLocationManager.authorizationStatus() {
             
@@ -202,7 +222,6 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
             break
         
         }
-        
         
     }
     

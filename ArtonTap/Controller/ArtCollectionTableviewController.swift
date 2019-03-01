@@ -56,23 +56,27 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         
         cell.textLabel?.text = artArray[indexPath.row].nameOfBeer
         
-        let imageURL = documentsPath[0].appendingPathComponent(artArray[indexPath.row].beerArt!)
+        if let beerArtImage = artArray[indexPath.row].beerArt {
         
-        do {
+            let imageURL = documentsPath[0].appendingPathComponent(beerArtImage)
             
-            let data = try Data(contentsOf: imageURL)
-            
-            let image = UIImage(data: data)
-            
-            let imageView = UIImageView(image: image)
-            
-            imageView.contentMode = .scaleAspectFill
-            
-            cell.backgroundView = imageView
-            
-        } catch {
-            
-            print("\(error)")
+            do {
+                
+                let data = try Data(contentsOf: imageURL)
+                
+                let image = UIImage(data: data)
+                
+                let imageView = UIImageView(image: image)
+                
+                imageView.contentMode = .scaleAspectFill
+                
+                cell.backgroundView = imageView
+                
+            } catch {
+                
+                print("\(error)")
+                
+            }
             
         }
         
@@ -102,7 +106,7 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
             
             let destinationVC = segue.destination as! ArtDetailsViewController
             
-            destinationVC.beerArt = beerArt!
+            destinationVC.beerArt = beerArt
             
         }
         
@@ -112,12 +116,12 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         
         if UIImagePickerController.isSourceTypeAvailable(.camera) == true {
             
-        imagePicker.sourceType = .camera
+            imagePicker.sourceType = .camera
             
         } else {
         
-        imagePicker.sourceType = .photoLibrary
-        imagePicker.allowsEditing = false
+            imagePicker.sourceType = .photoLibrary
+            imagePicker.allowsEditing = false
         
         }
         
@@ -129,9 +133,9 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         
         pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
         
-        imagePicker.dismiss(animated: true, completion: nil)
-        
         performSegue(withIdentifier: "addArt", sender: self)
+        
+        imagePicker.dismiss(animated: true, completion: nil)
         
     }
     

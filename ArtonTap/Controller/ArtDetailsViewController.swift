@@ -23,23 +23,29 @@ class ArtDetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let beerArtObject = beerArt {
+        // Do any additional setup after loading the view.
         
-            let imageURL = documentsPath[0].appendingPathComponent(beerArtObject.beerArt!)
+        if let beerArtObject = beerArt {
             
-            print(imageURL)
-            
-            do {
-            
-                let data = try Data(contentsOf: imageURL)
+            if let beerImageName = beerArtObject.beerArt {
+        
+                let imageURL = documentsPath[0].appendingPathComponent(beerImageName)
                 
-                let image = UIImage(data: data)
+    //            print(imageURL)
                 
-                artView.image = image
+                do {
                 
-            } catch {
-                
-                print("Error loading image data: \(error)")
+                    let data = try Data(contentsOf: imageURL)
+                    
+                    let image = UIImage(data: data)
+                    
+                    artView.image = image
+                    
+                } catch {
+                    
+                    print("Error loading image data: \(error)")
+                    
+                }
                 
             }
 
@@ -50,9 +56,7 @@ class ArtDetailsViewController: UIViewController {
                 
             }
         
-        
-        // Do any additional setup after loading the view.
-}
+    }
 
     /*
     // MARK: - Navigation

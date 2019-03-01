@@ -13,7 +13,9 @@ import CoreLocation
 class SearchTableViewController: UITableViewController {
     
     var matchingItems:[MKMapItem] = []
+    
     var userCoordinate: CLLocationCoordinate2D?
+    
     var handleMapSearchDelegate: HandleMapSearch?
 
     override func viewDidLoad() {
@@ -41,8 +43,8 @@ class SearchTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell")!
-        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! UITableViewCell
+    
         let selectedItem = matchingItems[indexPath.row].placemark
         
         cell.textLabel?.text = selectedItem.name
@@ -50,6 +52,7 @@ class SearchTableViewController: UITableViewController {
         cell.detailTextLabel?.text = parseAddress(selectedItem: selectedItem)
         
         return cell
+        
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -110,6 +113,8 @@ class SearchTableViewController: UITableViewController {
 
 }
 
+//MARK: - UISearchResultUpdating methods
+
 extension SearchTableViewController: UISearchResultsUpdating {
     
     func updateSearchResults(for searchController: UISearchController) {
@@ -118,13 +123,19 @@ extension SearchTableViewController: UISearchResultsUpdating {
             let searchBarText = searchController.searchBar.text else { print("Error in mapView or searchBar"); return }
         
         let request = MKLocalSearch.Request()
+        
         request.naturalLanguageQuery = searchBarText
+        
         request.region = MKCoordinateRegion.init(center: coordinates, latitudinalMeters: 5000, longitudinalMeters: 5000)
         
         let search = MKLocalSearch(request: request)
+        
         search.start { response, _ in
+            
             guard let response = response else { print("Error with response"); return }
+            
             self.matchingItems = response.mapItems
+            
             self.tableView.reloadData()
         }
     }
@@ -136,6 +147,7 @@ extension SearchTableViewController: UISearchResultsUpdating {
         let comma = (selectedItem.subThoroughfare != nil || selectedItem.thoroughfare != nil) && (selectedItem.subAdministrativeArea != nil || selectedItem.administrativeArea != nil) ? ", " : ""
         // put a space between "Washington" and "DC"
         let secondSpace = (selectedItem.subAdministrativeArea != nil && selectedItem.administrativeArea != nil) ? " " : ""
+        
         let addressLine = String(
             format:"%@%@%@%@%@%@%@",
             // street number
@@ -150,7 +162,9 @@ extension SearchTableViewController: UISearchResultsUpdating {
             // state
             selectedItem.administrativeArea ?? ""
         )
+        
         return addressLine
+        
     }
     
 }

@@ -11,6 +11,7 @@
 		CE46E02722176F5B0025FB5C /* ArtDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE46E02622176F5B0025FB5C /* ArtDetailsViewController.swift */; };
 		CE727131221CCD980040C84E /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE727130221CCD980040C84E /* MapViewController.swift */; };
 		CE727133221CCE400040C84E /* UserLocations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE727132221CCE400040C84E /* UserLocations.swift */; };
+		CE904D102225E654005CE6CF /* GlobeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE904D0F2225E654005CE6CF /* GlobeViewController.swift */; };
 		CEBBFBE32223557200A9085D /* SearchTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBBFBE22223557200A9085D /* SearchTableViewController.swift */; };
 		CED137F12215BAD200C9B2F3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED137F02215BAD200C9B2F3 /* AppDelegate.swift */; };
 		CED137F32215BAD300C9B2F3 /* ArtCollectionTableviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED137F22215BAD300C9B2F3 /* ArtCollectionTableviewController.swift */; };
@@ -30,6 +31,7 @@
 		CE46E02622176F5B0025FB5C /* ArtDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtDetailsViewController.swift; sourceTree = "<group>"; };
 		CE727130221CCD980040C84E /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		CE727132221CCE400040C84E /* UserLocations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLocations.swift; sourceTree = "<group>"; };
+		CE904D0F2225E654005CE6CF /* GlobeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobeViewController.swift; sourceTree = "<group>"; };
 		CEBBFBE22223557200A9085D /* SearchTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewController.swift; sourceTree = "<group>"; };
 		CED137ED2215BAD200C9B2F3 /* ArtonTap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArtonTap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CED137F02215BAD200C9B2F3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -76,11 +78,12 @@
 		CE46E02822176F710025FB5C /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				CEBBFBE22223557200A9085D /* SearchTableViewController.swift */,
+				CE904D0F2225E654005CE6CF /* GlobeViewController.swift */,
 				CE727130221CCD980040C84E /* MapViewController.swift */,
+				CEBBFBE22223557200A9085D /* SearchTableViewController.swift */,
+				CED138052215EF3100C9B2F3 /* AddArtViewCellViewController.swift */,
 				CED137F02215BAD200C9B2F3 /* AppDelegate.swift */,
 				CED137F22215BAD300C9B2F3 /* ArtCollectionTableviewController.swift */,
-				CED138052215EF3100C9B2F3 /* AddArtViewCellViewController.swift */,
 				CE46E02622176F5B0025FB5C /* ArtDetailsViewController.swift */,
 			);
 			path = Controller;
@@ -274,6 +277,7 @@
 				CED137F12215BAD200C9B2F3 /* AppDelegate.swift in Sources */,
 				CED138062215EF3100C9B2F3 /* AddArtViewCellViewController.swift in Sources */,
 				CE727133221CCE400040C84E /* UserLocations.swift in Sources */,
+				CE904D102225E654005CE6CF /* GlobeViewController.swift in Sources */,
 				CEBBFBE32223557200A9085D /* SearchTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
