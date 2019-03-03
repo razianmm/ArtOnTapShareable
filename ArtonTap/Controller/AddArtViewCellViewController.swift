@@ -11,10 +11,18 @@ import MapKit
 import SVProgressHUD
 import CoreLocation
 import MapKit
+import FirebaseDatabase
+import FirebaseAuth
 
 class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate {
     
     var newBeer: BeerArt?
+    
+    // Variables related to Firebase
+    
+    var ref = Database.database().reference(withPath: "beer-art")
+    
+    let user = Auth.auth().currentUser
     
     // Variables related to saving beer art image
     
@@ -147,6 +155,13 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
             
         }
         
+        if let databaseBeerName = newBeer?.nameOfBeer!.lowercased() {
+        
+            let beerArtRef = ref.child(databaseBeerName)
+        
+            beerArtRef.setValue(["beer-name" : databaseBeerName])
+            
+        }
         
         performSegue(withIdentifier: "artAdded", sender: self)
         

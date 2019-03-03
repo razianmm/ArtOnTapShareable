@@ -8,6 +8,8 @@
 
 import UIKit
 import CoreData
+import FirebaseAuth
+import ChameleonFramework
 
 class ArtCollectionTableViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
@@ -27,6 +29,10 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        let user = Auth.auth().currentUser
+        
+        print(user)
         
         imagePicker.delegate = self
         
@@ -66,11 +72,15 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
                 
                 let image = UIImage(data: data)
                 
+                let averageImageColor = UIColor(averageColorFrom: image)
+                
                 let imageView = UIImageView(image: image)
                 
                 imageView.contentMode = .scaleAspectFill
                 
                 cell.backgroundView = imageView
+                
+                cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: averageImageColor, isFlat: true)
                 
             } catch {
                 
