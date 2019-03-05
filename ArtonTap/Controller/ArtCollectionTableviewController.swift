@@ -102,7 +102,7 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         
     }
     
-    //MARK: - Data manipulation methods
+    //MARK: - Segue methods
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
@@ -121,6 +121,18 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         }
         
     }
+    
+    @IBAction func unwindToArtCollectionView(sender: UIStoryboardSegue) {
+        
+        let sourceVC = sender.source as! AddArtViewCellViewController
+            
+        artArray.append(sourceVC.newBeer!)
+        
+        self.tableView.reloadData()
+        
+    }
+    
+    //MARK: - Methods to add an image
 
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         

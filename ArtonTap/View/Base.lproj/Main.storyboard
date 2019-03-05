@@ -57,7 +57,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="f8X-0A-ixD">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="f8X-0A-ixD">
                                 <rect key="frame" x="0.0" y="20" width="375" height="319"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4uC-fl-L0n">
@@ -166,8 +166,8 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M3O-VF-OVh">
-                                <rect key="frame" x="164" y="617" width="46" height="30"/>
-                                <state key="normal" title="Button"/>
+                                <rect key="frame" x="114" y="617" width="161" height="30"/>
+                                <state key="normal" title="Add this Beer Art!"/>
                                 <connections>
                                     <action selector="addButtonPressed:" destination="vx7-Tx-hxR" eventType="touchUpInside" id="rHh-rC-3mp"/>
                                 </connections>
@@ -190,7 +190,7 @@
                             <constraint firstItem="qqK-Uu-E2T" firstAttribute="top" secondItem="XYC-MQ-sva" secondAttribute="bottom" constant="8" id="0rF-gE-3iR"/>
                             <constraint firstItem="hZo-RN-mER" firstAttribute="top" secondItem="obh-ec-qqH" secondAttribute="top" id="0yF-Op-RYo"/>
                             <constraint firstItem="hZo-RN-mER" firstAttribute="trailing" secondItem="obh-ec-qqH" secondAttribute="trailing" id="4PD-l4-ObD"/>
-                            <constraint firstItem="obh-ec-qqH" firstAttribute="trailing" secondItem="M3O-VF-OVh" secondAttribute="trailing" constant="165" id="8Fc-Vh-g9M"/>
+                            <constraint firstItem="obh-ec-qqH" firstAttribute="trailing" secondItem="M3O-VF-OVh" secondAttribute="trailing" constant="100" id="8Fc-Vh-g9M"/>
                             <constraint firstItem="M3O-VF-OVh" firstAttribute="top" secondItem="h48-Lj-Dc9" secondAttribute="bottom" constant="28" id="DFE-Qb-9NC"/>
                             <constraint firstItem="M3O-VF-OVh" firstAttribute="top" secondItem="h48-Lj-Dc9" secondAttribute="bottom" constant="28" id="DiK-AG-c8a"/>
                             <constraint firstItem="h48-Lj-Dc9" firstAttribute="top" secondItem="DMN-Ia-3gn" secondAttribute="bottom" constant="8" id="Dk4-Xd-9sM"/>
@@ -213,7 +213,7 @@
                             <constraint firstItem="obh-ec-qqH" firstAttribute="bottom" secondItem="M3O-VF-OVh" secondAttribute="bottom" constant="20" id="tiS-k3-f90"/>
                             <constraint firstItem="obh-ec-qqH" firstAttribute="trailing" secondItem="AtF-p1-hVd" secondAttribute="trailing" constant="8" id="wQf-4c-o7m"/>
                             <constraint firstItem="AtF-p1-hVd" firstAttribute="leading" secondItem="qqK-Uu-E2T" secondAttribute="trailing" constant="8" id="yhP-Gn-tha"/>
-                            <constraint firstItem="M3O-VF-OVh" firstAttribute="leading" secondItem="obh-ec-qqH" secondAttribute="leading" constant="164" id="zOI-Uk-5LL"/>
+                            <constraint firstItem="M3O-VF-OVh" firstAttribute="leading" secondItem="obh-ec-qqH" secondAttribute="leading" constant="114" id="zOI-Uk-5LL"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="obh-ec-qqH"/>
                     </view>
@@ -225,9 +225,11 @@
                         <outlet property="notesOnBeer" destination="h48-Lj-Dc9" id="Uza-Rw-o2o"/>
                         <segue destination="zs6-2j-XG8" kind="show" identifier="artAdded" id="FjF-St-Vwr"/>
                         <segue destination="hoa-Pd-c9B" kind="show" identifier="showMap" id="FAZ-Ss-5dA"/>
+                        <segue destination="3sY-9t-PSM" kind="unwind" identifier="backToArtCollection" unwindAction="unwindToArtCollectionViewWithSender:" id="dcG-px-rkN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="14V-zf-ZH7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="3sY-9t-PSM" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="3764" y="133.5832083958021"/>
         </scene>
@@ -401,7 +403,7 @@
                                 <rect key="frame" x="85" y="278" width="206" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Art On Tap!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R6O-TO-Gfx">
                                 <rect key="frame" x="112" y="112" width="149" height="36"/>

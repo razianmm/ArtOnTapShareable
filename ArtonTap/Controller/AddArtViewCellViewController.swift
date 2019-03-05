@@ -59,6 +59,12 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
         
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        self.view.endEditing(true)
+        
+    }
+    
     @IBAction func addButtonPressed(_ sender: UIButton) {
         
         saveImage()
@@ -115,55 +121,77 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
     
     func addBeer() {
         
-            newBeer = BeerArt(context: context)
-
-            newBeer?.nameOfBeer = nameOfBeer.text
-
-            newBeer?.whereDrank = location.text
-
-            newBeer?.artistName = artistName.text
-
-            newBeer?.notes = notesOnBeer.text
+        let beerName = self.nameOfBeer.text
         
-        if let latitude = whereDrankCoordinate?.latitude {
+        let notes = self.notesOnBeer.text
+        
+        let location = self.location.text
+        
+        let artistName = self.artistName.text
+        
+        SVProgressHUD.show()
+        
+        DispatchQueue.global(qos: .background).async {
+        
+            self.newBeer = BeerArt(context: self.context)
+
+            self.newBeer?.nameOfBeer = beerName
+
+            self.newBeer?.whereDrank = location
+
+            self.newBeer?.artistName = artistName
+
+            self.newBeer?.notes = notes
             
-            if let longitude = whereDrankCoordinate?.longitude {
+            if let latitude = self.whereDrankCoordinate?.latitude {
                 
-                newBeer?.whereLatitude = latitude
+                if let longitude = self.whereDrankCoordinate?.longitude {
+                    
+                    self.newBeer?.whereLatitude = latitude
+                    
+                    self.newBeer?.whereLongitude = longitude
+                    
+                }
                 
-                newBeer?.whereLongitude = longitude
+            }
+            
+            if let fileLocation = beerName {
+            
+                self.newBeer?.beerArt = "\(fileLocation)" + ".jpeg"
+                
+            }
+           
+            do {
+                
+                try self.context.save()
+                
+                print("New beer art item saved successfuly")
+                
+            } catch {
+                
+                print("Error saving new beer art item: \(error)")
+                
+            }
+            
+            if let databaseBeerName = self.newBeer?.nameOfBeer!.lowercased() {
+            
+                let beerArtRef = self.ref.child(databaseBeerName)
+            
+                beerArtRef.setValue(["beer-name" : databaseBeerName])
+                
+            }
+            
+            DispatchQueue.main.async {
+                
+                SVProgressHUD.dismiss()
+                
+                self.performSegue(withIdentifier: "backToArtCollection", sender: self)
                 
             }
             
         }
         
-        if let fileLocation = nameOfBeer.text {
         
-            newBeer?.beerArt = "\(fileLocation)" + ".jpeg"
-            
-        }
-       
-        do {
-            
-            try context.save()
-            
-            print("New beer art item saved successfuly")
-            
-        } catch {
-            
-            print("Error saving new beer art item: \(error)")
-            
-        }
-        
-        if let databaseBeerName = newBeer?.nameOfBeer!.lowercased() {
-        
-            let beerArtRef = ref.child(databaseBeerName)
-        
-            beerArtRef.setValue(["beer-name" : databaseBeerName])
-            
-        }
-        
-        performSegue(withIdentifier: "artAdded", sender: self)
         
     }
     
@@ -171,24 +199,13 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        if segue.identifier == "artAdded" {
-            
-            let destinationVC = segue.destination as! ArtCollectionTableViewController
-            
-            if let beerToAdd = newBeer {
-            
-            destinationVC.artArray.append(beerToAdd)
-                
-            }
-            
-        } else if segue.identifier == "showMap" {
+        if segue.identifier == "showMap" {
             
             let destinationVC = segue.destination as! MapViewController
             
             destinationVC.userCoordinate = userCoordinate
             
         }
-        
         
     }
     

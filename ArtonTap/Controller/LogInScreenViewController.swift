@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import FirebaseAuth
+import SVProgressHUD
 
 class LogInScreenViewController: UIViewController {
 
@@ -24,20 +25,30 @@ class LogInScreenViewController: UIViewController {
     
     @IBAction func logInButtonPressed(_ sender: UIButton) {
         
-        if let email = userEmail.text, let password = userPassword.text {
+        SVProgressHUD.show()
         
-            if email.count > 0 && password.count > 0 {
+        if let email = userEmail.text, let password = userPassword.text {
             
-                Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
-                    
-                    if user != nil && error == nil {
+            DispatchQueue.global(qos: .background).async {
+                
+                if email.count > 0 && password.count > 0 {
+                
+                    Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
                         
-                        self.performSegue(withIdentifier: "goToApp", sender: self)
+                        if user != nil && error == nil {
+                            
+                            DispatchQueue.main.async {
+                                
+                                SVProgressHUD.dismiss()
+                                
+                                 self.performSegue(withIdentifier: "goToApp", sender: self)
+                            }
                         
-                    } else if error != nil {
-                        
-                        print("Error signing user in: \(error)")
-                        
+                        } else if error != nil {
+                            
+                            print("Error signing user in: \(error)")
+                            
+                        }
                     }
                 }
             }
@@ -61,37 +72,49 @@ class LogInScreenViewController: UIViewController {
             
         }
         
-        let emailTextField = alert.textFields![0]
-        
-        let passwordTextField = alert.textFields![1]
-        
         let signUpAction = UIAlertAction(title: "Sign Me Up!", style: .default) { (UIAlertAction) in
             
-            Auth.auth().createUser(withEmail: emailTextField.text!, password: passwordTextField.text!, completion: { (user, error) in
+            SVProgressHUD.show()
+            
+            if let email = alert.textFields![0].text, let password = alert.textFields![1].text {
                 
-                if error == nil {
+                DispatchQueue.global(qos: .default).async {
+            
+                    Auth.auth().createUser(withEmail: email, password: password, completion: { (user, error) in
+                    
+                        if error == nil {
 
-                    Auth.auth().signIn(withEmail: emailTextField.text!, password: passwordTextField.text!, completion: { (user, error) in
-                        
-                        if user != nil, error == nil {
+                            Auth.auth().signIn(withEmail: email, password: password, completion: { (user, error) in
                             
-                            self.performSegue(withIdentifier: "goToApp", sender: self)
-                            
-                        } else if error != nil {
-                            
-                            print("Error signing user in: \(error)")
-                            
+                                if user != nil, error == nil {
+                                    
+                                    DispatchQueue.main.async {
+                                        
+                                        SVProgressHUD.dismiss()
+                                    
+                                        self.performSegue(withIdentifier: "goToApp", sender: self)
+                                        
+                                    }
+                                
+                            }   else if error != nil {
+                                
+                                print("Error signing user in: \(error)")
+                                
+                            }
+
+                            })
+
+                        } else {
+
+                        print("Error signing up: \(error)")
+
                         }
-
+                    
                     })
-
-                } else {
-
-                    print("Error signing up: \(error)")
-
+                    
                 }
                 
-            })
+            }
             
         }
         
