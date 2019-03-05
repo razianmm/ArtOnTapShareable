@@ -8,6 +8,8 @@
 
 import UIKit
 import CoreData
+import FirebaseAuth
+import ChameleonFramework
 
 class ArtCollectionTableViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
@@ -27,6 +29,10 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        let user = Auth.auth().currentUser
+        
+        print(user)
         
         imagePicker.delegate = self
         
@@ -56,23 +62,31 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         
         cell.textLabel?.text = artArray[indexPath.row].nameOfBeer
         
-        let imageURL = documentsPath[0].appendingPathComponent(artArray[indexPath.row].beerArt!)
+        if let beerArtImage = artArray[indexPath.row].beerArt {
         
-        do {
+            let imageURL = documentsPath[0].appendingPathComponent(beerArtImage)
             
-            let data = try Data(contentsOf: imageURL)
-            
-            let image = UIImage(data: data)
-            
-            let imageView = UIImageView(image: image)
-            
-            imageView.contentMode = .scaleAspectFill
-            
-            cell.backgroundView = imageView
-            
-        } catch {
-            
-            print("\(error)")
+            do {
+                
+                let data = try Data(contentsOf: imageURL)
+                
+                let image = UIImage(data: data)
+                
+                let averageImageColor = UIColor(averageColorFrom: image)
+                
+                let imageView = UIImageView(image: image)
+                
+                imageView.contentMode = .scaleAspectFill
+                
+                cell.backgroundView = imageView
+                
+                cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: averageImageColor, isFlat: true)
+                
+            } catch {
+                
+                print("\(error)")
+                
+            }
             
         }
         
@@ -88,7 +102,7 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         
     }
     
-    //MARK: - Data manipulation methods
+    //MARK: - Segue methods
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
@@ -102,16 +116,36 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
             
             let destinationVC = segue.destination as! ArtDetailsViewController
             
-            destinationVC.beerArt = beerArt!
+            destinationVC.beerArt = beerArt
             
         }
         
     }
+    
+    @IBAction func unwindToArtCollectionView(sender: UIStoryboardSegue) {
+        
+        let sourceVC = sender.source as! AddArtViewCellViewController
+            
+        artArray.append(sourceVC.newBeer!)
+        
+        self.tableView.reloadData()
+        
+    }
+    
+    //MARK: - Methods to add an image
 
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         
-        imagePicker.sourceType = .photoLibrary
-        imagePicker.allowsEditing = false
+        if UIImagePickerController.isSourceTypeAvailable(.camera) == true {
+            
+            imagePicker.sourceType = .camera
+            
+        } else {
+        
+            imagePicker.sourceType = .photoLibrary
+            imagePicker.allowsEditing = false
+        
+        }
         
         present(imagePicker, animated: true, completion: nil)
         
@@ -121,9 +155,9 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         
         pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
         
-        imagePicker.dismiss(animated: true, completion: nil)
-        
         performSegue(withIdentifier: "addArt", sender: self)
+        
+        imagePicker.dismiss(animated: true, completion: nil)
         
     }
     

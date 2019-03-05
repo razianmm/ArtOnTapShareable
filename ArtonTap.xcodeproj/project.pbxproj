@@ -7,8 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CE0422C12229CAD2001E922C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CE0422C02229CAD2001E922C /* GoogleService-Info.plist */; };
 		CE3C886822188F6E00A0B849 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE3C886722188F6E00A0B849 /* MapKit.framework */; };
 		CE46E02722176F5B0025FB5C /* ArtDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE46E02622176F5B0025FB5C /* ArtDetailsViewController.swift */; };
+		CE727131221CCD980040C84E /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE727130221CCD980040C84E /* MapViewController.swift */; };
+		CE727133221CCE400040C84E /* UserLocations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE727132221CCE400040C84E /* UserLocations.swift */; };
+		CE904D102225E654005CE6CF /* GlobeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE904D0F2225E654005CE6CF /* GlobeViewController.swift */; };
+		CEBBFBE32223557200A9085D /* SearchTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBBFBE22223557200A9085D /* SearchTableViewController.swift */; };
+		CEC792832229BC99001B2604 /* LogInScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC792822229BC99001B2604 /* LogInScreenViewController.swift */; };
 		CED137F12215BAD200C9B2F3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED137F02215BAD200C9B2F3 /* AppDelegate.swift */; };
 		CED137F32215BAD300C9B2F3 /* ArtCollectionTableviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED137F22215BAD300C9B2F3 /* ArtCollectionTableviewController.swift */; };
 		CED137F62215BAD300C9B2F3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CED137F42215BAD300C9B2F3 /* Main.storyboard */; };
@@ -16,11 +22,22 @@
 		CED137FB2215BAD500C9B2F3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CED137FA2215BAD500C9B2F3 /* Assets.xcassets */; };
 		CED137FE2215BAD500C9B2F3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CED137FC2215BAD500C9B2F3 /* LaunchScreen.storyboard */; };
 		CED138062215EF3100C9B2F3 /* AddArtViewCellViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED138052215EF3100C9B2F3 /* AddArtViewCellViewController.swift */; };
+		FFEB9CFBA91BBACAD71E4A1D /* Pods_ArtonTap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC9A8F34CE20CA8C8E72462E /* Pods_ArtonTap.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1633E00E65F68FC619503914 /* Pods-ArtonTap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ArtonTap.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ArtonTap/Pods-ArtonTap.debug.xcconfig"; sourceTree = "<group>"; };
+		9D479BB83E604BFBF9A43103 /* Pods-ArtonTap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ArtonTap.release.xcconfig"; path = "Pods/Target Support Files/Pods-ArtonTap/Pods-ArtonTap.release.xcconfig"; sourceTree = "<group>"; };
+		BC9A8F34CE20CA8C8E72462E /* Pods_ArtonTap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ArtonTap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE0142962229D2AA00A76023 /* ArtonTap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ArtonTap.entitlements; sourceTree = "<group>"; };
+		CE0422C02229CAD2001E922C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		CE3C886722188F6E00A0B849 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		CE46E02622176F5B0025FB5C /* ArtDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtDetailsViewController.swift; sourceTree = "<group>"; };
+		CE727130221CCD980040C84E /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		CE727132221CCE400040C84E /* UserLocations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLocations.swift; sourceTree = "<group>"; };
+		CE904D0F2225E654005CE6CF /* GlobeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobeViewController.swift; sourceTree = "<group>"; };
+		CEBBFBE22223557200A9085D /* SearchTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewController.swift; sourceTree = "<group>"; };
+		CEC792822229BC99001B2604 /* LogInScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInScreenViewController.swift; sourceTree = "<group>"; };
 		CED137ED2215BAD200C9B2F3 /* ArtonTap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArtonTap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CED137F02215BAD200C9B2F3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CED137F22215BAD300C9B2F3 /* ArtCollectionTableviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtCollectionTableviewController.swift; sourceTree = "<group>"; };
@@ -38,16 +55,27 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE3C886822188F6E00A0B849 /* MapKit.framework in Frameworks */,
+				FFEB9CFBA91BBACAD71E4A1D /* Pods_ArtonTap.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7EDE8EE7713D8CF7A1383890 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				1633E00E65F68FC619503914 /* Pods-ArtonTap.debug.xcconfig */,
+				9D479BB83E604BFBF9A43103 /* Pods-ArtonTap.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		CE3C886622188F6E00A0B849 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				CE3C886722188F6E00A0B849 /* MapKit.framework */,
+				BC9A8F34CE20CA8C8E72462E /* Pods_ArtonTap.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -55,9 +83,13 @@
 		CE46E02822176F710025FB5C /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				CEC792822229BC99001B2604 /* LogInScreenViewController.swift */,
+				CE904D0F2225E654005CE6CF /* GlobeViewController.swift */,
+				CE727130221CCD980040C84E /* MapViewController.swift */,
+				CEBBFBE22223557200A9085D /* SearchTableViewController.swift */,
+				CED138052215EF3100C9B2F3 /* AddArtViewCellViewController.swift */,
 				CED137F02215BAD200C9B2F3 /* AppDelegate.swift */,
 				CED137F22215BAD300C9B2F3 /* ArtCollectionTableviewController.swift */,
-				CED138052215EF3100C9B2F3 /* AddArtViewCellViewController.swift */,
 				CE46E02622176F5B0025FB5C /* ArtDetailsViewController.swift */,
 			);
 			path = Controller;
@@ -67,6 +99,7 @@
 			isa = PBXGroup;
 			children = (
 				CED137F72215BAD300C9B2F3 /* ArtonTap.xcdatamodeld */,
+				CE0422C02229CAD2001E922C /* GoogleService-Info.plist */,
 				CED137FF2215BAD500C9B2F3 /* Info.plist */,
 			);
 			path = Model;
@@ -84,6 +117,7 @@
 		CE46E02C22176FC40025FB5C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				CE727132221CCE400040C84E /* UserLocations.swift */,
 				CED137FA2215BAD500C9B2F3 /* Assets.xcassets */,
 			);
 			path = "Supporting Files";
@@ -95,6 +129,7 @@
 				CED137EF2215BAD200C9B2F3 /* ArtonTap */,
 				CED137EE2215BAD200C9B2F3 /* Products */,
 				CE3C886622188F6E00A0B849 /* Frameworks */,
+				7EDE8EE7713D8CF7A1383890 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -109,6 +144,7 @@
 		CED137EF2215BAD200C9B2F3 /* ArtonTap */ = {
 			isa = PBXGroup;
 			children = (
+				CE0142962229D2AA00A76023 /* ArtonTap.entitlements */,
 				CE46E02922176F8D0025FB5C /* Model */,
 				CE46E02A22176FA20025FB5C /* View */,
 				CE46E02822176F710025FB5C /* Controller */,
@@ -124,9 +160,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CED138022215BAD500C9B2F3 /* Build configuration list for PBXNativeTarget "ArtonTap" */;
 			buildPhases = (
+				09AA05EC9028C1CC51125CAE /* [CP] Check Pods Manifest.lock */,
 				CED137E92215BAD200C9B2F3 /* Sources */,
 				CED137EA2215BAD200C9B2F3 /* Frameworks */,
 				CED137EB2215BAD200C9B2F3 /* Resources */,
+				B72C0B554AE7EC0CD4192C35 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -150,6 +188,9 @@
 					CED137EC2215BAD200C9B2F3 = {
 						CreatedOnToolsVersion = 10.1;
 						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
 							com.apple.Maps.iOS = {
 								enabled = 1;
 							};
@@ -181,6 +222,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CED137FE2215BAD500C9B2F3 /* LaunchScreen.storyboard in Resources */,
+				CE0422C12229CAD2001E922C /* GoogleService-Info.plist in Resources */,
 				CED137FB2215BAD500C9B2F3 /* Assets.xcassets in Resources */,
 				CED137F62215BAD300C9B2F3 /* Main.storyboard in Resources */,
 			);
@@ -188,16 +230,78 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		09AA05EC9028C1CC51125CAE /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ArtonTap-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B72C0B554AE7EC0CD4192C35 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-ArtonTap/Pods-ArtonTap-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/ChameleonFramework/ChameleonFramework.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
+				"${BUILT_PRODUCTS_DIR}/SVProgressHUD/SVProgressHUD.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ChameleonFramework.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SVProgressHUD.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ArtonTap/Pods-ArtonTap-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		CED137E92215BAD200C9B2F3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				CED137F92215BAD300C9B2F3 /* ArtonTap.xcdatamodeld in Sources */,
+				CE727131221CCD980040C84E /* MapViewController.swift in Sources */,
 				CE46E02722176F5B0025FB5C /* ArtDetailsViewController.swift in Sources */,
 				CED137F32215BAD300C9B2F3 /* ArtCollectionTableviewController.swift in Sources */,
 				CED137F12215BAD200C9B2F3 /* AppDelegate.swift in Sources */,
 				CED138062215EF3100C9B2F3 /* AddArtViewCellViewController.swift in Sources */,
+				CE727133221CCE400040C84E /* UserLocations.swift in Sources */,
+				CE904D102225E654005CE6CF /* GlobeViewController.swift in Sources */,
+				CEC792832229BC99001B2604 /* LogInScreenViewController.swift in Sources */,
+				CEBBFBE32223557200A9085D /* SearchTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,8 +445,10 @@
 		};
 		CED138032215BAD500C9B2F3 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1633E00E65F68FC619503914 /* Pods-ArtonTap.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = ArtonTap/ArtonTap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = UZ6SZSAX26;
 				INFOPLIST_FILE = "$(SRCROOT)/ArtonTap/Model/Info.plist";
@@ -359,8 +465,10 @@
 		};
 		CED138042215BAD500C9B2F3 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9D479BB83E604BFBF9A43103 /* Pods-ArtonTap.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = ArtonTap/ArtonTap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = UZ6SZSAX26;
 				INFOPLIST_FILE = "$(SRCROOT)/ArtonTap/Model/Info.plist";
