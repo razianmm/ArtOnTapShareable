@@ -34,6 +34,11 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="qok-MB-4nj">
+                        <barButtonItem key="leftBarButtonItem" title="Log Out" id="91w-Vv-4zh">
+                            <connections>
+                                <action selector="logOutButtonPressed:" destination="zs6-2j-XG8" id="w4S-D8-8dc"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="3GD-Bd-kTL">
                             <connections>
                                 <action selector="addButtonPressed:" destination="zs6-2j-XG8" id="1k8-FW-owX"/>
@@ -43,9 +48,11 @@
                     <connections>
                         <segue destination="vx7-Tx-hxR" kind="show" identifier="addArt" id="H8i-kX-1n3"/>
                         <segue destination="UkB-k9-NQZ" kind="show" identifier="artDetails" id="c2J-ue-fMp"/>
+                        <segue destination="Sc6-X3-mwf" kind="unwind" identifier="logOut" unwindAction="unwindToLogInScreenWithSender:" id="d59-Rp-Q6x"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="boF-Jf-ZO8" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="Sc6-X3-mwf" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2943.1999999999998" y="133.5832083958021"/>
         </scene>
@@ -58,28 +65,28 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="f8X-0A-ixD">
-                                <rect key="frame" x="0.0" y="20" width="375" height="319"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="226"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4uC-fl-L0n">
-                                <rect key="frame" x="0.0" y="347" width="375" height="21"/>
+                                <rect key="frame" x="0.0" y="298" width="375" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KCZ-dy-pNZ">
-                                <rect key="frame" x="0.0" y="376" width="375" height="21"/>
+                                <rect key="frame" x="0.0" y="327" width="375" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Myn-kv-yzh">
-                                <rect key="frame" x="0.0" y="405" width="375" height="21"/>
+                                <rect key="frame" x="0.0" y="356" width="375" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kwi-ae-jln">
-                                <rect key="frame" x="0.0" y="434" width="375" height="213"/>
+                                <rect key="frame" x="0.0" y="385" width="375" height="213"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="213" id="srW-jx-pCz"/>
                                 </constraints>
@@ -133,47 +140,47 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hZo-RN-mER">
-                                <rect key="frame" x="0.0" y="20" width="375" height="319"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="226"/>
                             </imageView>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AFQ-Nv-Gda">
-                                <rect key="frame" x="0.0" y="343" width="375" height="30"/>
+                                <rect key="frame" x="0.0" y="294" width="375" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Where you drank it..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qqK-Uu-E2T">
-                                <rect key="frame" x="0.0" y="385" width="275" height="30"/>
+                                <rect key="frame" x="0.0" y="336" width="275" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Name of artist..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="DMN-Ia-3gn">
-                                <rect key="frame" x="0.0" y="423" width="375" height="30"/>
+                                <rect key="frame" x="0.0" y="374" width="375" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Notes on the beer..." textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="h48-Lj-Dc9">
-                                <rect key="frame" x="0.0" y="461" width="375" height="128"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Notes on the beer..." translatesAutoresizingMaskIntoConstraints="NO" id="h48-Lj-Dc9">
+                                <rect key="frame" x="0.0" y="412" width="375" height="128"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Name of Beer..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XYC-MQ-sva">
-                                <rect key="frame" x="0.0" y="347" width="375" height="30"/>
+                                <rect key="frame" x="0.0" y="298" width="375" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M3O-VF-OVh">
-                                <rect key="frame" x="114" y="617" width="161" height="30"/>
+                                <rect key="frame" x="114" y="568" width="161" height="30"/>
                                 <state key="normal" title="Add this Beer Art!"/>
                                 <connections>
                                     <action selector="addButtonPressed:" destination="vx7-Tx-hxR" eventType="touchUpInside" id="rHh-rC-3mp"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AtF-p1-hVd">
-                                <rect key="frame" x="283" y="383" width="84" height="34"/>
+                                <rect key="frame" x="283" y="334" width="84" height="34"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="84" id="Rhl-xT-MKd"/>
                                 </constraints>
@@ -242,10 +249,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="pUd-g7-Jg2">
-                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="554"/>
                             </mapView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xop-pZ-L2b">
-                                <rect key="frame" x="272" y="637" width="87" height="30"/>
+                                <rect key="frame" x="272" y="588" width="87" height="30"/>
                                 <state key="normal" title="Where Am I?"/>
                                 <connections>
                                     <action selector="userLocationButtonPressed:" destination="hoa-Pd-c9B" eventType="touchUpInside" id="Q5A-fm-d5T"/>
@@ -468,7 +475,7 @@
         <image name="glass" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="A2j-TV-vGb"/>
-        <segue reference="FjF-St-Vwr"/>
+        <segue reference="H8i-kX-1n3"/>
+        <segue reference="58P-gc-COs"/>
     </inferredMetricsTieBreakers>
 </document>

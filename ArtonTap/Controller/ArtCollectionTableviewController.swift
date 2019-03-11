@@ -21,6 +21,8 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
     
     var beerArt: BeerArt?
     
+    var user: User?
+    
     let documentsPath = FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask)
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -30,9 +32,7 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        let user = Auth.auth().currentUser
-        
-        print(user)
+        print(user?.userName)
         
         imagePicker.delegate = self
         
@@ -41,6 +41,10 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         loadBeerArtArray()
         
         tableView.reloadData()
+        
+        let worldVC = self.tabBarController?.viewControllers?[1] as! GlobeViewController
+        
+        worldVC.user = user
         
     }
     
@@ -112,6 +116,8 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         
             destinationVC.artToAdd = pickedImage
             
+            destinationVC.user = user
+            
         } else if segue.identifier == "artDetails" {
             
             let destinationVC = segue.destination as! ArtDetailsViewController
@@ -165,18 +171,43 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
     
     func loadBeerArtArray() {
         
-         let request: NSFetchRequest<BeerArt> = BeerArt.fetchRequest()
+        if let name = user?.userName {
         
-        do {
+            let request: NSFetchRequest<BeerArt> = BeerArt.fetchRequest()
             
-            artArray = try context.fetch(request)
+            let predicate = NSPredicate(format: "addedBy == %@", name)
             
-        } catch {
+            request.predicate = predicate
             
-            print("Error loading data: \(error)")
+            do {
+                
+                artArray = try context.fetch(request)
+                
+            } catch {
+                
+                print("Error loading data: \(error)")
+                
+            }
             
         }
     }
 
+    @IBAction func logOutButtonPressed(_ sender: UIBarButtonItem) {
+        
+        do {
+            
+            try Auth.auth().signOut()
+            
+            performSegue(withIdentifier: "logOut", sender: self)
+            
+        } catch {
+            
+            print("Error signing out")
+            
+        }
+        
+    }
+    
+    
 }
 

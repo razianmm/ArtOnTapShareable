@@ -10,6 +10,7 @@ import UIKit
 import MapKit
 import SVProgressHUD
 import CoreLocation
+import CoreData
 import MapKit
 import FirebaseDatabase
 import FirebaseAuth
@@ -20,15 +21,15 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
     
     // Variables related to Firebase
     
-    var ref = Database.database().reference(withPath: "beer-art")
-    
-    let user = Auth.auth().currentUser
+    var ref = Database.database().reference(withPath: "beer-art-objects")
     
     // Variables related to saving beer art image
     
     var fileLocation: String?
     
     var artToAdd: UIImage?
+    
+    var user: User?
     
     // Variables related to finding the user's location
     
@@ -54,6 +55,8 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
         super.viewDidLoad()
         
         print("view loaded")
+        
+        print(user?.userName)
         
         artImageView.image = artToAdd
         
@@ -160,6 +163,10 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
                 self.newBeer?.beerArt = "\(fileLocation)" + ".jpeg"
                 
             }
+            
+            self.newBeer?.addedBy = self.user?.userName
+            
+            self.user?.addToArtObjects(self.newBeer!)
            
             do {
                 
@@ -177,7 +184,13 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
             
                 let beerArtRef = self.ref.child(databaseBeerName)
             
-                beerArtRef.setValue(["beer-name" : databaseBeerName])
+                beerArtRef.setValue(["beer-name" : beerName])
+                
+                beerArtRef.setValue(["notes-on-beer" : notes ?? ""])
+                
+                beerArtRef.setValue(["location-drank" : location ?? ""])
+                
+                beerArtRef.setValue(["artist-name" : artistName ?? ""])
                 
             }
             
