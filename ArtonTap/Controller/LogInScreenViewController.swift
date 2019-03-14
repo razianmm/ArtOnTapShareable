@@ -21,7 +21,6 @@ class LogInScreenViewController: UIViewController {
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -55,8 +54,13 @@ class LogInScreenViewController: UIViewController {
                         
                         } else if error != nil {
                             
-                            print("Error signing user in: \(error)")
-                            
+                            DispatchQueue.main.async {
+                                
+                                SVProgressHUD.dismiss()
+                                
+                                print("Error signing user in: \(error)")
+                                
+                            }
                         }
                     }
                 }
@@ -67,7 +71,6 @@ class LogInScreenViewController: UIViewController {
     //MARK: - Sign Up method
     
     @IBAction func signUpButtonPressed(_ sender: UIButton) {
-        
         
         let alert = UIAlertController(title: "Sign Up New User", message: "Please Enter Your E-mail Address and a Password to Continue", preferredStyle: .alert)
         
@@ -94,6 +97,9 @@ class LogInScreenViewController: UIViewController {
                     Auth.auth().createUser(withEmail: email, password: password, completion: { (user, error) in
                     
                         if error == nil {
+                            
+                            
+                            //Save the user locally via CoreData
                             
                             self.user = User(context: self.context)
                             
@@ -124,16 +130,28 @@ class LogInScreenViewController: UIViewController {
                                     }
                                 
                             }   else if error != nil {
+                                    
+                                    DispatchQueue.main.async {
+                                    
+                                        SVProgressHUD.dismiss()
                                 
-                                print("Error signing user in: \(error)")
+                                        print("Error signing user in: \(error)")
+                                        
+                                    }
                                 
                             }
 
                             })
 
                         } else {
+                            
+                            DispatchQueue.main.async {
+                                
+                                SVProgressHUD.dismiss()
 
-                        print("Error signing up: \(error)")
+                                print("Error signing up: \(error)")
+                                
+                            }
 
                         }
                     
@@ -145,30 +163,22 @@ class LogInScreenViewController: UIViewController {
             
         }
         
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (UIAlertAction) in
+            
+            self.dismiss(animated: true, completion: nil)
+            
+        }
+        
         alert.addAction(signUpAction)
+        
+        alert.addAction(cancelAction)
         
         present(alert, animated: true)
         
         
     }
     
-    //MARK: - Methods to fetch registered user and send information through segue
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        if segue.identifier == "goToApp" {
-            
-            let tabController = segue.destination as! UITabBarController
-            
-            let navController = tabController.viewControllers![0] as! UINavigationController
-            
-            let destinationVC = navController.topViewController as! ArtCollectionTableViewController
-            
-            destinationVC.user = user
-            
-        }
-        
-    }
+    //MARK: - Methods to fetch current registered user and send information through segue
     
     func fetchUser() {
         
@@ -186,11 +196,33 @@ class LogInScreenViewController: UIViewController {
                 
                 print(user?.userName)
                 
+            } else {
+                
+                user = User(context: context)
+                
+                user?.userName = Auth.auth().currentUser?.email
+                
             }
             
         } catch {
             
             print("Error fetching user data: \(error)")
+        }
+        
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == "goToApp" {
+            
+            let tabController = segue.destination as! UITabBarController
+            
+            let navController = tabController.viewControllers![0] as! UINavigationController
+            
+            let destinationVC = navController.topViewController as! ArtCollectionTableViewController
+            
+            destinationVC.user = user
+            
         }
         
     }

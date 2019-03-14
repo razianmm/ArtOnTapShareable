@@ -4,6 +4,7 @@
         <attribute name="addedBy" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="artistName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="beerArt" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="imagePath" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="nameOfBeer" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notes" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="whereDrank" optional="YES" attributeType="String" syncable="YES"/>
@@ -16,7 +17,7 @@
         <relationship name="artObjects" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="BeerArt" inverseName="user" inverseEntity="BeerArt" syncable="YES"/>
     </entity>
     <elements>
-        <element name="BeerArt" positionX="262.5390625" positionY="-190.94921875" width="128" height="178"/>
+        <element name="BeerArt" positionX="262.5390625" positionY="-190.94921875" width="128" height="195"/>
         <element name="User" positionX="33.95703125" positionY="-242.90625" width="128" height="73"/>
     </elements>
 </model>

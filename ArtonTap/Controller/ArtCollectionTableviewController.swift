@@ -9,9 +9,18 @@
 import UIKit
 import CoreData
 import FirebaseAuth
+import FirebaseDatabase
+import FirebaseStorage
 import ChameleonFramework
+import SVProgressHUD
 
 class ArtCollectionTableViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    let ref = Database.database().reference()
+    
+    let storage = Storage.storage()
+    
+    let userID = Auth.auth().currentUser?.uid
     
     let imagePicker = UIImagePickerController()
     
@@ -23,7 +32,9 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
     
     var user: User?
     
-    let documentsPath = FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask)
+    let dispatchGroup = DispatchGroup()
+    
+    var documentsPath = FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask)
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
@@ -40,7 +51,7 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         
         loadBeerArtArray()
         
-        tableView.reloadData()
+//        tableView.reloadData()
         
         let worldVC = self.tabBarController?.viewControllers?[1] as! GlobeViewController
         
@@ -171,26 +182,40 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
     
     func loadBeerArtArray() {
         
-        if let name = user?.userName {
-        
-            let request: NSFetchRequest<BeerArt> = BeerArt.fetchRequest()
+            if let name = user?.userName {
             
-            let predicate = NSPredicate(format: "addedBy == %@", name)
-            
-            request.predicate = predicate
-            
-            do {
+                let request: NSFetchRequest<BeerArt> = BeerArt.fetchRequest()
                 
-                artArray = try context.fetch(request)
+                let predicate = NSPredicate(format: "addedBy == %@", name)
                 
-            } catch {
+                request.predicate = predicate
                 
-                print("Error loading data: \(error)")
+                do {
+                    
+                    artArray = try context.fetch(request)
+                    
+                    if artArray.isEmpty == true {
+                        
+                        syncBeerArtArray(completed: downloadImages)
+                        
+//                        downloadImages()
+                        
+                    } else {
+                    
+                        self.tableView.reloadData()
+                    
+                    }
+                    
+                } catch {
+                    
+                    print("Error loading data: \(error)")
+                    
+                }
                 
             }
-            
-        }
     }
+    
+    //MARK: - Firebase methods to log out and to sync data from database
 
     @IBAction func logOutButtonPressed(_ sender: UIBarButtonItem) {
         
@@ -208,6 +233,136 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         
     }
     
+    func syncBeerArtArray(completed: @escaping () -> Void) {
+        
+        SVProgressHUD.show()
+        
+        var artistName: String = ""
+        var beerName: String = ""
+        var locationDrank: String = ""
+        var notesOnBeer: String = ""
+        var addedBy: String = ""
+        var imagePath: String = ""
+        
+        ref.child(userID!).observeSingleEvent(of: .value) { (DataSnapshot) in
+            
+            if let value = DataSnapshot.value as? NSDictionary {
+                    
+                    for (_, values) in value {
+                        
+                        self.dispatchGroup.enter()
+                        
+                        if let beers = values as? NSDictionary {
+                            
+                            artistName = beers.value(forKey: "artist-name") as? String ?? ""
+                            beerName = beers.value(forKey: "beer-name") as? String ?? ""
+                            locationDrank = beers.value(forKey: "location-drank") as? String ?? ""
+                            notesOnBeer = beers.value(forKey: "notes-on-beer") as? String ?? ""
+                            addedBy = beers.value(forKey: "addedBy") as? String ?? ""
+                            imagePath = beers.value(forKey: "image-location") as? String ?? ""
+                            
+                            //Core Data implementation in method
+                            
+                            let savedBeer = BeerArt(context: self.context)
+                            
+                            savedBeer.nameOfBeer = beerName
+                            savedBeer.artistName = artistName
+                            savedBeer.whereDrank = locationDrank
+                            savedBeer.notes = notesOnBeer
+                            savedBeer.beerArt = beerName + ".jpeg"
+                            savedBeer.addedBy = addedBy
+                            savedBeer.imagePath = imagePath
+                            
+                            do {
+                                
+                                try self.context.save()
+                                
+                                print("Beer saved")
+                                
+                            } catch {
+                                
+                                print("Error saving new beer from database: \(error)")
+                                
+                            }
+                            
+                            self.artArray.append(savedBeer)
+                            
+                            self.dispatchGroup.leave()
+                            
+                        }
+                    }
+            }
+            
+            self.dispatchGroup.notify(queue: .main) {
+                
+                completed()
+                
+            }
+        
+        
+    }
+        
     
+    }
+
+    
+    func downloadImages() {
+        
+        for beers in artArray {
+            
+            if let pathName = beers.imagePath {
+                
+                if let name = beers.nameOfBeer {
+                    
+                    let pathReference = storage.reference(withPath: pathName)
+                    
+                    let fileName = name + ".jpeg"
+                    
+                    let localfileURL = documentsPath[0].appendingPathComponent(fileName)
+                    
+                    dispatchGroup.enter()
+                    
+                    DispatchQueue.global().async {
+                        
+                        let downloadTask = pathReference.write(toFile: localfileURL) { url, error in
+                         
+                            if error != nil {
+                                
+                                print("Error downloading image: \(error)")
+                            
+                            } else {
+                                
+                                print(url)
+                                
+                            }
+                        
+                            self.dispatchGroup.leave()
+                            
+                        }
+                        
+                    }
+                        
+                }
+                        
+            }
+                            
+        }
+        
+        dispatchGroup.notify(queue: .main) {
+            
+            SVProgressHUD.dismiss()
+            
+            print("All images downloaded")
+            
+            self.tableView.reloadData()
+            
+        }
+                    
+    } // end of last function
+            
+          
+                
 }
+
+
 
