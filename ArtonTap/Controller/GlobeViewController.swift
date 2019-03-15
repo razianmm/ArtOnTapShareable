@@ -17,6 +17,8 @@ class GlobeViewController: UIViewController {
     
     var artArray = [BeerArt]()
     
+    var user: User?
+    
     var beerCoordinates = [MKPointAnnotation]()
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -54,15 +56,23 @@ class GlobeViewController: UIViewController {
     
     func loadBeerArtArray() {
         
-        let request: NSFetchRequest<BeerArt> = BeerArt.fetchRequest()
-        
-        do {
+        if let name = user?.userName {
             
-            artArray = try context.fetch(request)
+            let request: NSFetchRequest<BeerArt> = BeerArt.fetchRequest()
             
-        } catch {
+            let predicate = NSPredicate(format: "addedBy == %@", name)
             
-            print("Error loading data: \(error)")
+            request.predicate = predicate
+            
+            do {
+                
+                artArray = try context.fetch(request)
+                
+            } catch {
+                
+                print("Error loading data: \(error)")
+                
+            }
             
         }
     }

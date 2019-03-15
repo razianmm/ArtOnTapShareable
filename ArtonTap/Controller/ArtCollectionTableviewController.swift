@@ -9,19 +9,40 @@
 import UIKit
 import CoreData
 import FirebaseAuth
+import FirebaseDatabase
+import FirebaseStorage
 import ChameleonFramework
+import SVProgressHUD
 
 class ArtCollectionTableViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    //Variables related to Firebase
+    
+    let ref = Database.database().reference()
+    
+    let storage = Storage.storage()
+    
+    let userID = Auth.auth().currentUser?.uid
+    
+    //Variables related to taking and saving images
     
     let imagePicker = UIImagePickerController()
     
     var pickedImage: UIImage?
     
+    //Variables related to TableView and manipulating data
+    
     var artArray = [BeerArt]()
     
     var beerArt: BeerArt?
     
-    let documentsPath = FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask)
+    var user: User?
+    
+    //Misc. variables
+    
+    let dispatchGroup = DispatchGroup()
+    
+    var documentsPath = FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask)
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
@@ -30,17 +51,15 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        let user = Auth.auth().currentUser
-        
-        print(user)
-        
         imagePicker.delegate = self
         
         self.navigationItem.title = "My Beer Art Collection"
         
         loadBeerArtArray()
         
-        tableView.reloadData()
+        let worldVC = self.tabBarController?.viewControllers?[1] as! GlobeViewController
+        
+        worldVC.user = user
         
     }
     
@@ -63,30 +82,20 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         cell.textLabel?.text = artArray[indexPath.row].nameOfBeer
         
         if let beerArtImage = artArray[indexPath.row].beerArt {
-        
+
             let imageURL = documentsPath[0].appendingPathComponent(beerArtImage)
             
-            do {
-                
-                let data = try Data(contentsOf: imageURL)
-                
-                let image = UIImage(data: data)
-                
-                let averageImageColor = UIColor(averageColorFrom: image)
-                
-                let imageView = UIImageView(image: image)
-                
-                imageView.contentMode = .scaleAspectFill
-                
-                cell.backgroundView = imageView
-                
-                cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: averageImageColor, isFlat: true)
-                
-            } catch {
-                
-                print("\(error)")
-                
-            }
+            let image = UIImage(contentsOfFile: imageURL.path)
+            
+            let imageView = UIImageView(image: image)
+            
+            imageView.contentMode = .scaleAspectFill
+            
+            cell.backgroundView = imageView
+            
+            let averageImageColor = UIColor(averageColorFrom: image)
+            
+            cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: averageImageColor, isFlat: true)
             
         }
         
@@ -112,6 +121,8 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         
             destinationVC.artToAdd = pickedImage
             
+            destinationVC.user = user
+            
         } else if segue.identifier == "artDetails" {
             
             let destinationVC = segue.destination as! ArtDetailsViewController
@@ -129,6 +140,12 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         artArray.append(sourceVC.newBeer!)
         
         self.tableView.reloadData()
+        
+    }
+    
+    @IBAction func unwindFromArtDetailsView(sender: UIStoryboardSegue) {
+        
+        loadBeerArtArray()
         
     }
     
@@ -164,19 +181,187 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
     //MARK: - Core Data functions
     
     func loadBeerArtArray() {
-        
-         let request: NSFetchRequest<BeerArt> = BeerArt.fetchRequest()
+
+            if let name = user?.userName {
+            
+                let request: NSFetchRequest<BeerArt> = BeerArt.fetchRequest()
+                
+                let predicate = NSPredicate(format: "addedBy == %@", name)
+                
+                request.predicate = predicate
+                
+                do {
+                    
+                    artArray = try self.context.fetch(request)
+                    
+                    if artArray.count == 0 {
+                        
+                        self.tableView.reloadData()
+                        
+                        syncBeerArtArray(download: downloadImages)
+                        
+                    } else {
+                        
+                        self.tableView.reloadData()
+                        
+                    }
+                    
+                } catch {
+                    
+                    print("Error loading data from context")
+                    
+                }
+                        
+            }
+                
+    }
+    
+    //MARK: - Firebase methods to log out and to sync data from database
+
+    @IBAction func logOutButtonPressed(_ sender: UIBarButtonItem) {
         
         do {
             
-            artArray = try context.fetch(request)
+            try Auth.auth().signOut()
+            
+            performSegue(withIdentifier: "logOut", sender: self)
             
         } catch {
             
-            print("Error loading data: \(error)")
+            print("Error signing out")
             
         }
+        
+    }
+    
+    func syncBeerArtArray(download: @escaping () -> Void) {
+        
+        SVProgressHUD.show()
+        
+        var artistName: String = ""
+        var beerName: String = ""
+        var locationDrank: String = ""
+        var notesOnBeer: String = ""
+        var addedBy: String = ""
+        var imagePath: String = ""
+        
+        ref.child(userID!).observeSingleEvent(of: .value) { (DataSnapshot) in
+            
+            if let value = DataSnapshot.value as? NSDictionary {
+                    
+                    for (_, values) in value {
+                        
+                        self.dispatchGroup.enter()
+                        
+                        if let beers = values as? NSDictionary {
+                            
+                            artistName = beers.value(forKey: "artist-name") as? String ?? ""
+                            beerName = beers.value(forKey: "beer-name") as? String ?? ""
+                            locationDrank = beers.value(forKey: "location-drank") as? String ?? ""
+                            notesOnBeer = beers.value(forKey: "notes-on-beer") as? String ?? ""
+                            addedBy = beers.value(forKey: "added-by") as? String ?? ""
+                            imagePath = beers.value(forKey: "image-location") as? String ?? ""
+                            
+                            //Core Data implementation in method - move to seperate function?
+                            
+                            let savedBeer = BeerArt(context: self.context)
+                            
+                            savedBeer.nameOfBeer = beerName
+                            savedBeer.artistName = artistName
+                            savedBeer.whereDrank = locationDrank
+                            savedBeer.notes = notesOnBeer
+                            savedBeer.beerArt = beerName + ".jpeg"
+                            savedBeer.addedBy = addedBy
+                            savedBeer.imagePath = imagePath
+                            
+                            do {
+                                
+                                try self.context.save()
+                                
+                                print("Beer saved")
+                                
+                            } catch {
+                                
+                                print("Error saving new beer from database: \(error)")
+                                
+                            }
+                            
+                            self.artArray.append(savedBeer)
+                            
+                            self.dispatchGroup.leave()
+                            
+                        }
+                    }
+            }
+            
+            self.dispatchGroup.notify(queue: .main) {
+                
+                download()
+                
+            }
+        
+        }
+        
     }
 
+    
+    func downloadImages() {
+        
+        for beers in artArray {
+            
+            if let pathName = beers.imagePath {
+                
+                if let name = beers.nameOfBeer {
+                    
+                    let pathReference = storage.reference(withPath: pathName)
+                    
+                    let fileName = name + ".jpeg"
+                    
+                    let localfileURL = documentsPath[0].appendingPathComponent(fileName)
+                    
+                    dispatchGroup.enter()
+                    
+                    DispatchQueue.global().async {
+                        
+                        let downloadTask = pathReference.write(toFile: localfileURL) { url, error in
+                         
+                            if error != nil {
+                                
+                                print("Error downloading image: \(error)")
+                            
+                            } else {
+                                
+                                print(url)
+                                
+                            }
+                        
+                            self.dispatchGroup.leave()
+                            
+                        }
+                        
+                    }
+                        
+                }
+                        
+            }
+                            
+        }
+        
+        dispatchGroup.notify(queue: .main) {
+            
+            SVProgressHUD.dismiss()
+            
+            print("All images downloaded")
+            
+            self.tableView.reloadData()
+            
+        }
+                    
+    } // end of last function
+            
+          
+                
 }
+
+
 

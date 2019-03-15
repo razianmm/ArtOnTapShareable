@@ -7,12 +7,25 @@
 //
 
 import UIKit
+import FirebaseDatabase
+import FirebaseStorage
+import FirebaseAuth
 
 class ArtDetailsViewController: UIViewController {
     
+    let userID = Auth.auth().currentUser?.uid
+    
+    let storage = Storage.storage()
+    
+    let ref = Database.database().reference()
+    
     var beerArt: BeerArt?
     
-     let documentsPath = FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask)
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
+    let documentsPath = FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask)
+    
+    let fileManager = FileManager()
     
     @IBOutlet weak var artView: UIImageView!
     @IBOutlet weak var beerName: UILabel!
@@ -57,15 +70,93 @@ class ArtDetailsViewController: UIViewController {
             }
         
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    
+    
+    @IBAction func deleteArt(_ sender: UIButton) {
+        
+        deleteObjectFromFirebaseCloud()
+        
+        deleteObjectFromFirebaseDatabase()
+        
+        deleteObjectFromContext()
+        
+        performSegue(withIdentifier: "backToCollection", sender: self)
+        
     }
-    */
+    
+    //MARK: - Art deletion methods
+    
+    func deleteObjectFromContext() {
+        
+        if let beerArtObject = beerArt {
+            
+            if let fileName = beerArtObject.beerArt {
+                
+                context.delete(beerArtObject)
+                
+                do {
+                    
+                    try context.save()
+                    
+                    try fileManager.removeItem(at: documentsPath[0].appendingPathComponent(fileName))
+                    
+                } catch {
+                    
+                    print("Error deleting beer art object")
+                    
+                }
+                
+            }
+            
+        }
+        
+    }
+    
+    func deleteObjectFromFirebaseCloud() {
+        
+        let storageRef = storage.reference()
+        
+        if let beerArtObject = beerArt {
+        
+            if let fileToDelete = beerArtObject.imagePath {
+                
+                let fileRef = storageRef.child(fileToDelete)
+                
+                print(fileRef)
+                
+                    fileRef.delete { error in
+                        
+                        if let error = error {
+                            
+                            print("Error deleting file: \(error)")
+                            
+                        } else {
+                            
+                            print("Image removed from Cloud Storage successfully")
+                            
+                        }
+                        
+                    }
+                
+            }
+            
+        }
 
+    }
+    
+    func deleteObjectFromFirebaseDatabase() {
+        
+        if let beerArtObject = beerArt {
+            
+            if let objectToDelete = beerArtObject.nameOfBeer {
+        
+                let dataLocation = ref.child(userID!).child(objectToDelete)
+                
+                dataLocation.removeValue()
+                
+            }
+        }
+        
+    }
+        
 }

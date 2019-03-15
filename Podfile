@@ -9,7 +9,9 @@ target 'ArtonTap' do
 pod 'SVProgressHUD', '~> 2.2'
 pod 'Firebase/Core'
 pod 'Firebase/Auth'
+pod 'Firebase/Storage'
 pod 'Firebase/Database'
 pod 'ChameleonFramework/Swift'
+pod 'UITextView+Placeholder'
 
 end

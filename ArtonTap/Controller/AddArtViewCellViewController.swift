@@ -10,9 +10,11 @@ import UIKit
 import MapKit
 import SVProgressHUD
 import CoreLocation
+import CoreData
 import MapKit
 import FirebaseDatabase
 import FirebaseAuth
+import FirebaseStorage
 
 class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate {
     
@@ -20,15 +22,17 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
     
     // Variables related to Firebase
     
-    var ref = Database.database().reference(withPath: "beer-art")
+    var ref = Database.database().reference(withPath: (Auth.auth().currentUser?.uid)!)
     
-    let user = Auth.auth().currentUser
+    var storage = Storage.storage()
     
-    // Variables related to saving beer art image
+    // Variables related to saving beer art image locally
     
     var fileLocation: String?
     
     var artToAdd: UIImage?
+    
+    var user: User?
     
     // Variables related to finding the user's location
     
@@ -55,6 +59,8 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
         
         print("view loaded")
         
+        print(user?.userName)
+        
         artImageView.image = artToAdd
         
     }
@@ -69,11 +75,13 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
         
         saveImage()
         
+        saveToFirebase()
+        
         addBeer()
         
     }
     
-    //MARK: - Save art image method
+    //MARK: - Save art image to local storage method
     
     func saveImage() {
 
@@ -121,77 +129,97 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
     
     func addBeer() {
         
-        let beerName = self.nameOfBeer.text
+         if let beerName = self.nameOfBeer.text, let notes = self.notesOnBeer.text, let location = self.location.text, let artistName = self.artistName.text {
         
-        let notes = self.notesOnBeer.text
-        
-        let location = self.location.text
-        
-        let artistName = self.artistName.text
-        
-        SVProgressHUD.show()
-        
-        DispatchQueue.global(qos: .background).async {
-        
-            self.newBeer = BeerArt(context: self.context)
-
-            self.newBeer?.nameOfBeer = beerName
-
-            self.newBeer?.whereDrank = location
-
-            self.newBeer?.artistName = artistName
-
-            self.newBeer?.notes = notes
+            SVProgressHUD.show()
             
-            if let latitude = self.whereDrankCoordinate?.latitude {
+            DispatchQueue.global(qos: .background).async {
+            
+                self.newBeer = BeerArt(context: self.context)
+
+                self.newBeer?.nameOfBeer = beerName
+
+                self.newBeer?.whereDrank = location
+
+                self.newBeer?.artistName = artistName
+
+                self.newBeer?.notes = notes
                 
-                if let longitude = self.whereDrankCoordinate?.longitude {
+                if let latitude = self.whereDrankCoordinate?.latitude {
                     
-                    self.newBeer?.whereLatitude = latitude
+                    if let longitude = self.whereDrankCoordinate?.longitude {
+                        
+                        self.newBeer?.whereLatitude = latitude
+                        
+                        self.newBeer?.whereLongitude = longitude
+                        
+                    }
                     
-                    self.newBeer?.whereLongitude = longitude
+                }
+                
+                self.newBeer?.beerArt = "\(beerName)" + ".jpeg"
+                
+                self.newBeer?.addedBy = self.user?.userName
+                
+                self.user?.addToArtObjects(self.newBeer!)
+               
+                do {
+                    
+                    try self.context.save()
+                    
+                    print("New beer art item saved successfuly")
+                    
+                } catch {
+                    
+                    print("Error saving new beer art item: \(error)")
+                    
+                }
+                
+                DispatchQueue.main.async {
+                    
+                    SVProgressHUD.dismiss()
+                    
+                    self.performSegue(withIdentifier: "backToArtCollection", sender: self)
                     
                 }
                 
             }
+        }
+    }
+    
+    //MARK: - Save data to Firebase methods
+    
+    func saveToFirebase() {
+        
+        if let beerName = self.nameOfBeer.text, let notes = self.notesOnBeer.text, let location = self.location.text, let artistName = self.artistName.text, let addedBy = self.user?.userName {
             
-            if let fileLocation = beerName {
+        let file = "\(beerName)" + ".jpeg"
+        
+        //Firebase variables and implementation related to saving image
             
-                self.newBeer?.beerArt = "\(fileLocation)" + ".jpeg"
-                
-            }
-           
-            do {
-                
-                try self.context.save()
-                
-                print("New beer art item saved successfuly")
-                
-            } catch {
-                
-                print("Error saving new beer art item: \(error)")
-                
-            }
+        let storageRef = storage.reference()
+        
+        let imagesRef = storageRef.child("images").child(file)
             
-            if let databaseBeerName = self.newBeer?.nameOfBeer!.lowercased() {
+        let filePathToSave = documentsPath[0].appendingPathComponent(file)
             
-                let beerArtRef = self.ref.child(databaseBeerName)
+        let uploadTask = imagesRef.putFile(from: filePathToSave)
             
-                beerArtRef.setValue(["beer-name" : databaseBeerName])
-                
-            }
+        let observer = uploadTask.observe(.success) { snapshot in
             
-            DispatchQueue.main.async {
-                
-                SVProgressHUD.dismiss()
-                
-                self.performSegue(withIdentifier: "backToArtCollection", sender: self)
-                
-            }
+            print("Image uploaded successfully")
             
         }
+            
+        //Firebase variables and implementation related to saving object
+            
+        let beerNameRef = self.ref.child(beerName)
+            
+        let fullImagePath = imagesRef.fullPath
         
-        
+            beerNameRef.setValue(["beer-name" : beerName, "notes-on-beer" : notes ?? "", "location-drank" : location ?? "", "artist-name" : artistName ?? "", "image-location" : fullImagePath, "added-by" : addedBy ?? ""])
+            
+        }
         
     }
     
