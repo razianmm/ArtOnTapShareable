@@ -16,21 +16,29 @@ import SVProgressHUD
 
 class ArtCollectionTableViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    //Variables related to Firebase
+    
     let ref = Database.database().reference()
     
     let storage = Storage.storage()
     
     let userID = Auth.auth().currentUser?.uid
     
+    //Variables related to taking and saving images
+    
     let imagePicker = UIImagePickerController()
     
     var pickedImage: UIImage?
+    
+    //Variables related to TableView and manipulating data
     
     var artArray = [BeerArt]()
     
     var beerArt: BeerArt?
     
     var user: User?
+    
+    //Misc. variables
     
     let dispatchGroup = DispatchGroup()
     
@@ -43,15 +51,11 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        print(user?.userName)
-        
         imagePicker.delegate = self
         
         self.navigationItem.title = "My Beer Art Collection"
         
         loadBeerArtArray()
-        
-//        tableView.reloadData()
         
         let worldVC = self.tabBarController?.viewControllers?[1] as! GlobeViewController
         
@@ -78,30 +82,20 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         cell.textLabel?.text = artArray[indexPath.row].nameOfBeer
         
         if let beerArtImage = artArray[indexPath.row].beerArt {
-        
+
             let imageURL = documentsPath[0].appendingPathComponent(beerArtImage)
             
-            do {
-                
-                let data = try Data(contentsOf: imageURL)
-                
-                let image = UIImage(data: data)
-                
-                let averageImageColor = UIColor(averageColorFrom: image)
-                
-                let imageView = UIImageView(image: image)
-                
-                imageView.contentMode = .scaleAspectFill
-                
-                cell.backgroundView = imageView
-                
-                cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: averageImageColor, isFlat: true)
-                
-            } catch {
-                
-                print("\(error)")
-                
-            }
+            let image = UIImage(contentsOfFile: imageURL.path)
+            
+            let imageView = UIImageView(image: image)
+            
+            imageView.contentMode = .scaleAspectFill
+            
+            cell.backgroundView = imageView
+            
+            let averageImageColor = UIColor(averageColorFrom: image)
+            
+            cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: averageImageColor, isFlat: true)
             
         }
         
@@ -149,6 +143,12 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         
     }
     
+    @IBAction func unwindFromArtDetailsView(sender: UIStoryboardSegue) {
+        
+        loadBeerArtArray()
+        
+    }
+    
     //MARK: - Methods to add an image
 
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
@@ -181,7 +181,7 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
     //MARK: - Core Data functions
     
     func loadBeerArtArray() {
-        
+
             if let name = user?.userName {
             
                 let request: NSFetchRequest<BeerArt> = BeerArt.fetchRequest()
@@ -192,27 +192,28 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
                 
                 do {
                     
-                    artArray = try context.fetch(request)
+                    artArray = try self.context.fetch(request)
                     
-                    if artArray.isEmpty == true {
+                    if artArray.count == 0 {
                         
-                        syncBeerArtArray(completed: downloadImages)
+                        self.tableView.reloadData()
                         
-//                        downloadImages()
+                        syncBeerArtArray(download: downloadImages)
                         
                     } else {
-                    
+                        
                         self.tableView.reloadData()
-                    
+                        
                     }
                     
                 } catch {
                     
-                    print("Error loading data: \(error)")
+                    print("Error loading data from context")
                     
                 }
-                
+                        
             }
+                
     }
     
     //MARK: - Firebase methods to log out and to sync data from database
@@ -233,7 +234,7 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         
     }
     
-    func syncBeerArtArray(completed: @escaping () -> Void) {
+    func syncBeerArtArray(download: @escaping () -> Void) {
         
         SVProgressHUD.show()
         
@@ -258,10 +259,10 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
                             beerName = beers.value(forKey: "beer-name") as? String ?? ""
                             locationDrank = beers.value(forKey: "location-drank") as? String ?? ""
                             notesOnBeer = beers.value(forKey: "notes-on-beer") as? String ?? ""
-                            addedBy = beers.value(forKey: "addedBy") as? String ?? ""
+                            addedBy = beers.value(forKey: "added-by") as? String ?? ""
                             imagePath = beers.value(forKey: "image-location") as? String ?? ""
                             
-                            //Core Data implementation in method
+                            //Core Data implementation in method - move to seperate function?
                             
                             let savedBeer = BeerArt(context: self.context)
                             
@@ -295,14 +296,12 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
             
             self.dispatchGroup.notify(queue: .main) {
                 
-                completed()
+                download()
                 
             }
         
+        }
         
-    }
-        
-    
     }
 
     

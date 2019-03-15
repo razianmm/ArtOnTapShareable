@@ -85,27 +85,38 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kwi-ae-jln">
-                                <rect key="frame" x="0.0" y="385" width="375" height="213"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kwi-ae-jln">
+                                <rect key="frame" x="0.0" y="385" width="375" height="178"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="213" id="srW-jx-pCz"/>
+                                    <constraint firstAttribute="height" constant="178" id="srW-jx-pCz"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EPn-pg-GWr">
+                                <rect key="frame" x="164" y="588" width="46" height="30"/>
+                                <state key="normal" title="Delete"/>
+                                <connections>
+                                    <action selector="deleteArt:" destination="UkB-k9-NQZ" eventType="touchUpInside" id="zNp-xb-FkF"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="EPn-pg-GWr" firstAttribute="leading" secondItem="sBL-WN-QVg" secondAttribute="leading" constant="164" id="1Ia-r0-M5d"/>
                             <constraint firstItem="KCZ-dy-pNZ" firstAttribute="top" secondItem="4uC-fl-L0n" secondAttribute="bottom" constant="8" id="1ge-Im-8pE"/>
                             <constraint firstItem="kwi-ae-jln" firstAttribute="top" secondItem="Myn-kv-yzh" secondAttribute="bottom" constant="8" id="64L-Se-eN5"/>
                             <constraint firstItem="Myn-kv-yzh" firstAttribute="top" secondItem="KCZ-dy-pNZ" secondAttribute="bottom" constant="8" id="664-5P-l3R"/>
                             <constraint firstItem="4uC-fl-L0n" firstAttribute="top" secondItem="f8X-0A-ixD" secondAttribute="bottom" constant="8" id="6M8-oF-3Rw"/>
                             <constraint firstItem="Myn-kv-yzh" firstAttribute="leading" secondItem="sBL-WN-QVg" secondAttribute="leading" id="7ho-2Z-DnE"/>
                             <constraint firstItem="f8X-0A-ixD" firstAttribute="trailing" secondItem="sBL-WN-QVg" secondAttribute="trailing" id="D3e-1w-hl6"/>
+                            <constraint firstItem="sBL-WN-QVg" firstAttribute="trailing" secondItem="EPn-pg-GWr" secondAttribute="trailing" constant="165" id="EVb-yA-CuE"/>
                             <constraint firstItem="KCZ-dy-pNZ" firstAttribute="trailing" secondItem="sBL-WN-QVg" secondAttribute="trailing" id="EsP-Te-3pU"/>
                             <constraint firstItem="f8X-0A-ixD" firstAttribute="top" secondItem="sBL-WN-QVg" secondAttribute="top" id="FMX-oX-5C3"/>
                             <constraint firstItem="kwi-ae-jln" firstAttribute="leading" secondItem="sBL-WN-QVg" secondAttribute="leading" id="Ipa-aU-f85"/>
+                            <constraint firstItem="EPn-pg-GWr" firstAttribute="top" secondItem="kwi-ae-jln" secondAttribute="bottom" constant="25" id="KBl-hz-FEn"/>
+                            <constraint firstItem="EPn-pg-GWr" firstAttribute="bottom" secondItem="sBL-WN-QVg" secondAttribute="bottom" id="Nlv-1K-C48"/>
                             <constraint firstItem="sBL-WN-QVg" firstAttribute="bottom" secondItem="f8X-0A-ixD" secondAttribute="bottom" constant="328" id="Pzr-wb-Im1"/>
                             <constraint firstItem="Myn-kv-yzh" firstAttribute="top" secondItem="KCZ-dy-pNZ" secondAttribute="bottom" constant="8" id="QBI-mM-0LH"/>
                             <constraint firstItem="KCZ-dy-pNZ" firstAttribute="leading" secondItem="sBL-WN-QVg" secondAttribute="leading" id="QQ6-hY-aP5"/>
@@ -113,7 +124,7 @@
                             <constraint firstItem="kwi-ae-jln" firstAttribute="trailing" secondItem="sBL-WN-QVg" secondAttribute="trailing" id="Z8l-5l-nPn"/>
                             <constraint firstItem="KCZ-dy-pNZ" firstAttribute="top" secondItem="4uC-fl-L0n" secondAttribute="bottom" constant="8" id="oSc-gh-2cS"/>
                             <constraint firstItem="Myn-kv-yzh" firstAttribute="trailing" secondItem="sBL-WN-QVg" secondAttribute="trailing" id="qgu-yy-EFu"/>
-                            <constraint firstItem="sBL-WN-QVg" firstAttribute="bottom" secondItem="kwi-ae-jln" secondAttribute="bottom" constant="20" id="rvI-gL-wCa"/>
+                            <constraint firstItem="sBL-WN-QVg" firstAttribute="bottom" secondItem="kwi-ae-jln" secondAttribute="bottom" constant="55" id="rvI-gL-wCa"/>
                             <constraint firstItem="4uC-fl-L0n" firstAttribute="trailing" secondItem="sBL-WN-QVg" secondAttribute="trailing" id="scp-kn-alo"/>
                             <constraint firstItem="4uC-fl-L0n" firstAttribute="leading" secondItem="sBL-WN-QVg" secondAttribute="leading" id="tIL-oj-LVf"/>
                         </constraints>
@@ -125,9 +136,11 @@
                         <outlet property="beerName" destination="4uC-fl-L0n" id="x74-kE-Pf4"/>
                         <outlet property="beerNotes" destination="kwi-ae-jln" id="DVU-Ke-bgz"/>
                         <outlet property="whereDrank" destination="KCZ-dy-pNZ" id="P29-6Q-WcZ"/>
+                        <segue destination="EJa-5Z-ugt" kind="unwind" identifier="backToCollection" unwindAction="unwindFromArtDetailsViewWithSender:" id="JhV-AB-wMl"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7pq-c4-sgT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="EJa-5Z-ugt" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2004" y="-613.04347826086962"/>
         </scene>

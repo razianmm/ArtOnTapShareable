@@ -12,5 +12,6 @@ pod 'Firebase/Auth'
 pod 'Firebase/Storage'
 pod 'Firebase/Database'
 pod 'ChameleonFramework/Swift'
+pod 'UITextView+Placeholder'
 
 end
