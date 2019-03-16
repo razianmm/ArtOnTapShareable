@@ -196,6 +196,12 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
                     
                     if artArray.count == 0 {
                         
+                        
+                        
+                        
+                        
+                        
+                        
                         self.tableView.reloadData()
                         
                         syncBeerArtArray(download: downloadImages)
@@ -244,6 +250,8 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         var notesOnBeer: String = ""
         var addedBy: String = ""
         var imagePath: String = ""
+        var latitude: Double = 0
+        var longitude: Double = 0
         
         ref.child(userID!).observeSingleEvent(of: .value) { (DataSnapshot) in
             
@@ -261,6 +269,9 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
                             notesOnBeer = beers.value(forKey: "notes-on-beer") as? String ?? ""
                             addedBy = beers.value(forKey: "added-by") as? String ?? ""
                             imagePath = beers.value(forKey: "image-location") as? String ?? ""
+                            latitude = beers.value(forKey: "latitude") as? Double ?? 0
+                            longitude = beers.value(forKey: "longitude") as? Double ?? 0
+                            
                             
                             //Core Data implementation in method - move to seperate function?
                             
@@ -273,6 +284,8 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
                             savedBeer.beerArt = beerName + ".jpeg"
                             savedBeer.addedBy = addedBy
                             savedBeer.imagePath = imagePath
+                            savedBeer.whereLatitude = latitude
+                            savedBeer.whereLongitude = longitude
                             
                             do {
                                 
@@ -327,7 +340,7 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
                          
                             if error != nil {
                                 
-                                print("Error downloading image: \(error)")
+                                print("Error downloading image: \(String(describing: error))")
                             
                             } else {
                                 

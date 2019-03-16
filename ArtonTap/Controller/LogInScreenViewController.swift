@@ -7,8 +7,8 @@
 //
 
 import UIKit
-import Firebase
 import FirebaseAuth
+import FirebaseDatabase
 import SVProgressHUD
 import CoreData
 
@@ -25,6 +25,7 @@ class LogInScreenViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        
     }
     
     //MARK: - Log In method
@@ -58,11 +59,36 @@ class LogInScreenViewController: UIViewController {
                                 
                                 SVProgressHUD.dismiss()
                                 
-                                print("Error signing user in: \(error)")
+                                let alert = UIAlertController(title: "Error signing user in", message: "There was an error signing in, please check your information and try again", preferredStyle: .alert)
+                                
+                                let OKaction = UIAlertAction(title: "OK", style: .default, handler: { (UIAlertAction) in
+                                    
+                                    alert.dismiss(animated: true, completion: nil)
+                                    
+                                })
+                                
+                                alert.addAction(OKaction)
+                                
+                                self.present(alert, animated: true)
                                 
                             }
                         }
                     }
+                    
+                } else {
+                    
+                    let alert = UIAlertController(title: "Missing information", message: "Please fill both username and password fields to log in", preferredStyle: .alert)
+                    
+                    let OKaction = UIAlertAction(title: "OK", style: .default, handler: { (UIAlertAction) in
+                        
+                        alert.dismiss(animated: true, completion: nil)
+                        
+                    })
+                    
+                    alert.addAction(OKaction)
+                    
+                    self.present(alert, animated: true)
+                    
                 }
             }
         }
@@ -92,75 +118,72 @@ class LogInScreenViewController: UIViewController {
             
             if let email = alert.textFields![0].text, let password = alert.textFields![1].text {
                 
-                DispatchQueue.global(qos: .default).async {
-            
-                    Auth.auth().createUser(withEmail: email, password: password, completion: { (user, error) in
+//                self.checkWhetherUserExistsInFirebase(withEmail: email)
+                
+//                self.saveUserToFirebase(withEmail: email)
+                
+                Auth.auth().createUser(withEmail: email, password: password, completion: { (user, error) in
                     
-                        if error == nil {
+                    if error == nil {
+                        
+                        //Save the user locally via CoreData
+                        
+                        self.saveUserToCoreData(withEmail: email)
+                        
+                        DispatchQueue.global(qos: .default).async {
                             
-                            
-                            //Save the user locally via CoreData
-                            
-                            self.user = User(context: self.context)
-                            
-                            self.user?.userName = email
-                            
-                            do {
-                                
-                                try self.context.save()
-                                
-                                print("New user saved successfully")
-                                
-                            } catch {
-                                
-                                print("Error saving new user: \(error)")
-                            }
-                            
-
                             Auth.auth().signIn(withEmail: email, password: password, completion: { (user, error) in
-                            
+                                
                                 if user != nil, error == nil {
                                     
                                     DispatchQueue.main.async {
                                         
                                         SVProgressHUD.dismiss()
-                                    
+                                        
                                         self.performSegue(withIdentifier: "goToApp", sender: self)
                                         
                                     }
-                                
-                            }   else if error != nil {
+                                    
+                                } else if error != nil {
                                     
                                     DispatchQueue.main.async {
-                                    
+                                        
                                         SVProgressHUD.dismiss()
-                                
+                                        
                                         print("Error signing user in: \(error)")
                                         
                                     }
+                                    
+                                }
                                 
-                            }
-
                             })
-
-                        } else {
                             
-                            DispatchQueue.main.async {
-                                
-                                SVProgressHUD.dismiss()
-
-                                print("Error signing up: \(error)")
-                                
-                            }
-
                         }
+                        
+                    } else {
+                        
+                        DispatchQueue.main.async {
+                        
+                            SVProgressHUD.dismiss()
+                            
+                            let alert = UIAlertController(title: "Sorry", message: error?.localizedDescription, preferredStyle: .alert)
+                            
+                            alert.addAction(UIKit.UIAlertAction(title: "OK", style: .default, handler: { (UIAlertAction) in
+                                
+                                alert.dismiss(animated: true, completion: nil)
+                                
+                            }))
+                            
+                            self.present(alert, animated: true)
+                            
+                            print("Error signing up: \(error)")
+                            
+                        }
+                        
+                    }
                     
-                    })
-                    
-                }
-                
+                })
             }
-            
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (UIAlertAction) in
@@ -178,7 +201,7 @@ class LogInScreenViewController: UIViewController {
         
     }
     
-    //MARK: - Methods to fetch current registered user and send information through segue
+    //MARK: - Methods to save and fetch current registered user and send information through segue
     
     func fetchUser() {
         
@@ -211,6 +234,28 @@ class LogInScreenViewController: UIViewController {
         
     }
     
+    func saveUserToCoreData(withEmail: String) {
+        
+        user = User(context: context)
+        
+        user?.userName = withEmail
+        
+        do {
+            
+            try context.save()
+            
+            print("New user saved successfully")
+            
+        } catch {
+            
+            print("Error saving new user: \(error)")
+        }
+        
+        
+    }
+    
+    //Segue methods
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "goToApp" {
@@ -232,8 +277,6 @@ class LogInScreenViewController: UIViewController {
         let sourceVC = sender.source as! ArtCollectionTableViewController
         
         self.user = nil
-        
-        print(user)
         
     }
 

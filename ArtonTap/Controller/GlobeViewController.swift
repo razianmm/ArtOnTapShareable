@@ -11,7 +11,7 @@ import MapKit
 import CoreData
 import CoreLocation
 
-class GlobeViewController: UIViewController {
+class GlobeViewController: UIViewController, MKMapViewDelegate {
     
     @IBOutlet weak var globeView: MKMapView!
     
@@ -39,6 +39,8 @@ class GlobeViewController: UIViewController {
             let location = CLLocationCoordinate2DMake(latitude, longitude)
             
             let annotation = MKPointAnnotation()
+            
+            annotation.title = beer.nameOfBeer
             
             annotation.coordinate = location
 

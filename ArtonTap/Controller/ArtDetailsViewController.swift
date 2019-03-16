@@ -31,7 +31,7 @@ class ArtDetailsViewController: UIViewController {
     @IBOutlet weak var beerName: UILabel!
     @IBOutlet weak var whereDrank: UILabel!
     @IBOutlet weak var artistName: UILabel!
-    @IBOutlet weak var beerNotes: UILabel!
+    @IBOutlet weak var notesOnBeer: UITextView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,8 +65,7 @@ class ArtDetailsViewController: UIViewController {
             beerName.text = beerArtObject.nameOfBeer
             whereDrank.text = beerArtObject.whereDrank
             artistName.text = beerArtObject.artistName
-            beerNotes.text = beerArtObject.notes
-                
+            notesOnBeer.text = "Notes: \(String(describing: beerArtObject.notes ?? ""))"
             }
         
     }
@@ -74,14 +73,43 @@ class ArtDetailsViewController: UIViewController {
     
     @IBAction func deleteArt(_ sender: UIButton) {
         
-        deleteObjectFromFirebaseCloud()
+        let alert = UIAlertController(title: "Delete from database?", message: "Would you like to delete this item from the online database as well, or just locally?", preferredStyle: .alert)
         
-        deleteObjectFromFirebaseDatabase()
+        let deleteFromDatabaseAction = UIAlertAction(title: "Delete from both database and locally", style: .default) { (UIAlertAction) in
+            
+            self.deleteObjectFromFirebaseCloud()
+            
+            self.deleteObjectFromFirebaseDatabase()
+            
+            self.deleteObjectFromContext()
+            
+            self.performSegue(withIdentifier: "backToCollection", sender: self)
+            
+        }
         
-        deleteObjectFromContext()
+        let deleteFromLocalContext = UIAlertAction(title: "Delete from local storage only", style: .default) { (UIAlertAction) in
+            
+            self.deleteObjectFromContext()
+            
+            self.performSegue(withIdentifier: "backToCollection", sender: self)
         
-        performSegue(withIdentifier: "backToCollection", sender: self)
+        }
         
+        let cancelButton = UIAlertAction(title: "Cancel", style: .default) { (UIAlertAction) in
+            
+            alert.dismiss(animated: true, completion: nil)
+            
+        }
+        
+        alert.addAction(deleteFromDatabaseAction)
+        
+        alert.addAction(deleteFromLocalContext)
+        
+        alert.addAction(cancelButton)
+        
+        present(alert, animated: true)
+        
+    
     }
     
     //MARK: - Art deletion methods
