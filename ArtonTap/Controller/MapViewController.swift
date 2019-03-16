@@ -18,7 +18,11 @@ protocol HandleMapSearch {
 
 class MapViewController: UIViewController, MKMapViewDelegate, UITableViewDelegate {
     
+    //Variable related to table for searching locations
+    
     var searchController: UISearchController? = nil
+    
+    //Variables related to map view
     
     @IBOutlet weak var mapView: MKMapView!
     
@@ -33,10 +37,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UITableViewDelegat
     var newLocation: CLLocation?
     
     var locationTitle: String = ""
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
         
         mapView.delegate = self
@@ -73,7 +77,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UITableViewDelegat
         
     }
     
-    
     //MARK: - Create user location pin and reset to user location methods
     
     func createUserLocationPin() {
@@ -81,7 +84,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UITableViewDelegat
         let annotation = MKPointAnnotation()
         
         if let userCoordinate = userCoordinate {
-        
+            
             annotation.coordinate = userCoordinate
             
             let userLocation = CLLocation(latitude: userCoordinate.latitude, longitude: userCoordinate.longitude)
@@ -89,17 +92,17 @@ class MapViewController: UIViewController, MKMapViewDelegate, UITableViewDelegat
             geoCoder.reverseGeocodeLocation(userLocation) { (placemarks, error) in
                 
                 if let placeName = placemarks?[0].name {
-                
+                    
                     annotation.title = placeName
-                
+                    
                     self.locationTitle = placeName
                     
                     print(self.locationTitle)
-                
+                    
                 }
                 
             }
-        
+            
         }
         
         mapView.addAnnotation(annotation)
@@ -177,7 +180,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UITableViewDelegat
                     geoCoder.reverseGeocodeLocation(newLocation!) { (placemarks, error) in
                         
                         if let placeName = placemarks?[0].name {
-                        
+                            
                             draggedView.title = placeName
                             
                             self.locationTitle = placeName
@@ -216,7 +219,7 @@ extension MapViewController: HandleMapSearch {
         annotation.coordinate = placemark.coordinate
         
         if let name = placemark.name {
-        
+            
             annotation.title = name
             
             self.locationTitle = name

@@ -13,11 +13,15 @@ import FirebaseAuth
 
 class ArtDetailsViewController: UIViewController {
     
+    //Variables related to Firebase
+    
     let userID = Auth.auth().currentUser?.uid
     
     let storage = Storage.storage()
     
     let ref = Database.database().reference()
+    
+    //Variables related to local storage
     
     var beerArt: BeerArt?
     
@@ -41,13 +45,11 @@ class ArtDetailsViewController: UIViewController {
         if let beerArtObject = beerArt {
             
             if let beerImageName = beerArtObject.beerArt {
-        
+                
                 let imageURL = documentsPath[0].appendingPathComponent(beerImageName)
                 
-    //            print(imageURL)
-                
                 do {
-                
+                    
                     let data = try Data(contentsOf: imageURL)
                     
                     let image = UIImage(data: data)
@@ -61,15 +63,14 @@ class ArtDetailsViewController: UIViewController {
                 }
                 
             }
-
+            
             beerName.text = beerArtObject.nameOfBeer
             whereDrank.text = beerArtObject.whereDrank
             artistName.text = beerArtObject.artistName
             notesOnBeer.text = "Notes: \(String(describing: beerArtObject.notes ?? ""))"
-            }
+        }
         
     }
-    
     
     @IBAction func deleteArt(_ sender: UIButton) {
         
@@ -92,7 +93,7 @@ class ArtDetailsViewController: UIViewController {
             self.deleteObjectFromContext()
             
             self.performSegue(withIdentifier: "backToCollection", sender: self)
-        
+            
         }
         
         let cancelButton = UIAlertAction(title: "Cancel", style: .default) { (UIAlertAction) in
@@ -109,7 +110,6 @@ class ArtDetailsViewController: UIViewController {
         
         present(alert, animated: true)
         
-    
     }
     
     //MARK: - Art deletion methods
@@ -145,31 +145,30 @@ class ArtDetailsViewController: UIViewController {
         let storageRef = storage.reference()
         
         if let beerArtObject = beerArt {
-        
+            
             if let fileToDelete = beerArtObject.imagePath {
                 
                 let fileRef = storageRef.child(fileToDelete)
                 
                 print(fileRef)
                 
-                    fileRef.delete { error in
+                fileRef.delete { error in
+                    
+                    if let error = error {
                         
-                        if let error = error {
-                            
-                            print("Error deleting file: \(error)")
-                            
-                        } else {
-                            
-                            print("Image removed from Cloud Storage successfully")
-                            
-                        }
+                        print("Error deleting file: \(error)")
+                        
+                    } else {
+                        
+                        //                            print("Image removed from Cloud Storage successfully")
                         
                     }
-                
+                    
+                }
             }
             
         }
-
+        
     }
     
     func deleteObjectFromFirebaseDatabase() {
@@ -177,7 +176,7 @@ class ArtDetailsViewController: UIViewController {
         if let beerArtObject = beerArt {
             
             if let objectToDelete = beerArtObject.nameOfBeer {
-        
+                
                 let dataLocation = ref.child(userID!).child(objectToDelete)
                 
                 dataLocation.removeValue()
@@ -186,5 +185,5 @@ class ArtDetailsViewController: UIViewController {
         }
         
     }
-        
+    
 }

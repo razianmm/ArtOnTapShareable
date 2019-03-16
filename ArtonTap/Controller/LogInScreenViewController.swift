@@ -13,7 +13,7 @@ import SVProgressHUD
 import CoreData
 
 class LogInScreenViewController: UIViewController {
-
+    
     @IBOutlet weak var userEmail: UITextField!
     @IBOutlet weak var userPassword: UITextField!
     
@@ -23,7 +23,7 @@ class LogInScreenViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
         
     }
@@ -45,7 +45,7 @@ class LogInScreenViewController: UIViewController {
             DispatchQueue.global(qos: .background).async {
                 
                 if email.count > 0 && password.count > 0 {
-                
+                    
                     Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
                         
                         if user != nil && error == nil {
@@ -56,9 +56,9 @@ class LogInScreenViewController: UIViewController {
                                 
                                 SVProgressHUD.dismiss()
                                 
-                                 self.performSegue(withIdentifier: "goToApp", sender: self)
+                                self.performSegue(withIdentifier: "goToApp", sender: self)
                             }
-                        
+                            
                         } else if error != nil {
                             
                             DispatchQueue.main.async {
@@ -67,13 +67,11 @@ class LogInScreenViewController: UIViewController {
                                 
                                 let alert = UIAlertController(title: "Error signing user in", message: "There was an error signing in, please check your information and try again", preferredStyle: .alert)
                                 
-                                let OKaction = UIAlertAction(title: "OK", style: .default, handler: { (UIAlertAction) in
+                                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (UIAlertAction) in
                                     
                                     alert.dismiss(animated: true, completion: nil)
                                     
-                                })
-                                
-                                alert.addAction(OKaction)
+                                }))
                                 
                                 self.present(alert, animated: true)
                                 
@@ -85,13 +83,11 @@ class LogInScreenViewController: UIViewController {
                     
                     let alert = UIAlertController(title: "Missing information", message: "Please fill both username and password fields to log in", preferredStyle: .alert)
                     
-                    let OKaction = UIAlertAction(title: "OK", style: .default, handler: { (UIAlertAction) in
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (UIAlertAction) in
                         
                         alert.dismiss(animated: true, completion: nil)
                         
-                    })
-                    
-                    alert.addAction(OKaction)
+                    }))
                     
                     self.present(alert, animated: true)
                     
@@ -124,10 +120,6 @@ class LogInScreenViewController: UIViewController {
             
             if let email = alert.textFields![0].text, let password = alert.textFields![1].text {
                 
-//                self.checkWhetherUserExistsInFirebase(withEmail: email)
-                
-//                self.saveUserToFirebase(withEmail: email)
-                
                 Auth.auth().createUser(withEmail: email, password: password, completion: { (user, error) in
                     
                     if error == nil {
@@ -156,7 +148,7 @@ class LogInScreenViewController: UIViewController {
                                         
                                         SVProgressHUD.dismiss()
                                         
-                                        print("Error signing user in: \(error)")
+                                        print("Error signing user in: \(String(describing: error))")
                                         
                                     }
                                     
@@ -169,7 +161,7 @@ class LogInScreenViewController: UIViewController {
                     } else {
                         
                         DispatchQueue.main.async {
-                        
+                            
                             SVProgressHUD.dismiss()
                             
                             let alert = UIAlertController(title: "Sorry", message: error?.localizedDescription, preferredStyle: .alert)
@@ -182,7 +174,17 @@ class LogInScreenViewController: UIViewController {
                             
                             self.present(alert, animated: true)
                             
-                            print("Error signing up: \(error)")
+                            let signInAlert = UIAlertController(title: "Error signing user in", message: "There was an error signing in, please check your information and try again", preferredStyle: .alert)
+                            
+                            signInAlert.addAction(UIKit.UIAlertAction(title: "OK", style: .default, handler: { (UIAlertAction) in
+                                
+                                signInAlert.dismiss(animated: true, completion: nil)
+                                
+                            }))
+                            
+                            self.present(alert, animated: true)
+                            
+                            print("Error signing up: \(String(describing: error))")
                             
                         }
                         
@@ -192,29 +194,26 @@ class LogInScreenViewController: UIViewController {
             }
         }
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (UIAlertAction) in
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default) { (UIAlertAction) in
             
             self.dismiss(animated: true, completion: nil)
             
-        }
+        })
         
         alert.addAction(signUpAction)
         
-        alert.addAction(cancelAction)
-        
         present(alert, animated: true)
-        
         
     }
     
-    //MARK: - Methods to save and fetch current registered user and send information through segue
+    //MARK: - Methods to fetch and save current registered user locally
     
     func fetchUser() {
         
         let userRequest: NSFetchRequest<User> = User.fetchRequest()
         
         userRequest.predicate = NSPredicate(format: "userName == %@", userEmail.text!)
-
+        
         do {
             
             var currentUser: Array = try context.fetch(userRequest)
@@ -223,7 +222,7 @@ class LogInScreenViewController: UIViewController {
                 
                 user = currentUser[0]
                 
-                print(user?.userName)
+                //                print(user?.userName as Any)
                 
             } else {
                 
@@ -250,7 +249,7 @@ class LogInScreenViewController: UIViewController {
             
             try context.save()
             
-            print("New user saved successfully")
+            //            print("New user saved successfully")
             
         } catch {
             
@@ -260,7 +259,7 @@ class LogInScreenViewController: UIViewController {
         
     }
     
-    //Segue methods
+    //MARK: - Segue methods
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
@@ -280,10 +279,8 @@ class LogInScreenViewController: UIViewController {
     
     @IBAction func unwindToLogInScreen(sender: UIStoryboardSegue) {
         
-        let sourceVC = sender.source as! ArtCollectionTableViewController
-        
         self.user = nil
         
     }
-
+    
 }

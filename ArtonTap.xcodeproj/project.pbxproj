@@ -85,8 +85,8 @@
 		CE46E02822176F710025FB5C /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				CE1D6E53223D17C0000D0387 /* DeletionViewController.swift */,
 				CEC792822229BC99001B2604 /* LogInScreenViewController.swift */,
+				CE1D6E53223D17C0000D0387 /* DeletionViewController.swift */,
 				CE904D0F2225E654005CE6CF /* GlobeViewController.swift */,
 				CE727130221CCD980040C84E /* MapViewController.swift */,
 				CEBBFBE22223557200A9085D /* SearchTableViewController.swift */,

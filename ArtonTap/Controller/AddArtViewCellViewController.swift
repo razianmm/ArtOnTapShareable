@@ -19,23 +19,25 @@ import UITextView_Placeholder
 
 class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate {
     
-    var newBeer: BeerArt?
-    
     // Variables related to Firebase
     
     var ref = Database.database().reference(withPath: (Auth.auth().currentUser?.uid)!)
     
     var storage = Storage.storage()
     
-//    var doesNameAlreadyExist: Bool = false
-    
     // Variables related to saving beer art image locally
+    
+    var newBeer: BeerArt?
     
     var fileLocation: String?
     
     var artToAdd: UIImage?
     
     var user: User?
+    
+    let documentsPath = FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask)
+    
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     // Variables related to finding the user's location
     
@@ -47,6 +49,8 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
     
     var locationName: String?
     
+    // Other misc variables
+    
     let dispatchGroup = DispatchGroup()
     
     @IBOutlet weak var nameOfBeer: UITextField!
@@ -55,14 +59,10 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
     @IBOutlet weak var notesOnBeer: UITextView!
     @IBOutlet weak var artImageView: UIImageView!
     
-    let documentsPath = FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask)
-    
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print(user?.userName)
+        //        print(user?.userName)
         
         notesOnBeer.placeholder = "Add your notes here"
         
@@ -85,7 +85,7 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
             let beerName = nameOfBeer.text
             
             checkIfNameExists(withName: beerName!) { result in
-            
+                
                 if result == false {
                     
                     SVProgressHUD.show()
@@ -93,7 +93,7 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
                     self.dispatchGroup.enter()
                     
                     DispatchQueue.main.async {
-                    
+                        
                         self.addBeer()
                         
                         self.saveImage()
@@ -114,15 +114,15 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
                     
                 } else {
                     
-                        let alert = UIAlertController(title: "Sorry", message: "This beer name already exists either locally or in the database, please choose another", preferredStyle: .alert)
+                    let alert = UIAlertController(title: "Sorry", message: "This beer name already exists either locally or in the database, please choose another", preferredStyle: .alert)
                     
-                        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (UIAlertAction) in
-                            
-                            alert.dismiss(animated: true, completion: nil)
-                            
-                        }))
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (UIAlertAction) in
+                        
+                        alert.dismiss(animated: true, completion: nil)
+                        
+                    }))
                     
-                        self.present(alert, animated: true)
+                    self.present(alert, animated: true)
                     
                 }
                 
@@ -142,33 +142,106 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
             
         }
         
-    } // end of addButton
+    }
     
     //MARK: - Save art image to local storage method
     
     func saveImage() {
-
-            let imageFileName = nameOfBeer.text! + ".jpeg"
-            
-            let imageToStore = artToAdd!.jpegData(compressionQuality: 0.5)
-
-            let newDocument = documentsPath[0].appendingPathComponent(imageFileName)
-
-            do {
-
-                try imageToStore?.write(to: newDocument)
-                
-                print("Image saved successfully")
-
-            } catch {
-
-                print("Error saving image: \(error)")
-
-            }
         
-    } //End of saveImage
+        let imageFileName = nameOfBeer.text! + ".jpeg"
+        
+        let imageToStore = artToAdd!.jpegData(compressionQuality: 0.5)
+        
+        let newDocument = documentsPath[0].appendingPathComponent(imageFileName)
+        
+        do {
+            
+            try imageToStore?.write(to: newDocument)
+            
+            //                print("Image saved successfully")
+            
+        } catch {
+            
+            print("Error saving image: \(error)")
+            
+        }
+        
+    }
     
-    //MARK: - Save image to Firebase
+    //MARK: - Save beer to local storage method
+    
+    func addBeer() {
+        
+        if let beerName = self.nameOfBeer.text, let notes = self.notesOnBeer.text, let location = self.location.text, let artistName = self.artistName.text {
+            
+            self.newBeer = BeerArt(context: self.context)
+            
+            self.newBeer?.nameOfBeer = beerName
+            
+            self.newBeer?.whereDrank = location
+            
+            self.newBeer?.artistName = artistName
+            
+            self.newBeer?.notes = notes
+            
+            if let latitude = self.whereDrankCoordinate?.latitude {
+                
+                if let longitude = self.whereDrankCoordinate?.longitude {
+                    
+                    self.newBeer?.whereLatitude = latitude
+                    
+                    self.newBeer?.whereLongitude = longitude
+                    
+                }
+                
+            }
+            
+            self.newBeer?.beerArt = "\(beerName)" + ".jpeg"
+            
+            self.newBeer?.addedBy = self.user?.userName
+            
+            self.newBeer?.imagePath = "images/" + "\(beerName)" + ".jpeg"
+            
+            self.user?.addToArtObjects(self.newBeer!)
+            
+            do {
+                
+                try self.context.save()
+                
+                //                    print("New beer art saved successfuly")
+                
+            } catch {
+                
+                print("Error saving new beer art item: \(error)")
+                
+            }
+            
+        }
+        
+    }
+    
+    //MARK: - Save beer data to Firebase methods
+    
+    func saveToFirebase() {
+        
+        let beerName = self.nameOfBeer.text
+        let notes = self.notesOnBeer.text
+        let location = self.location.text
+        let artistName = self.artistName.text
+        let addedBy = self.user?.userName
+        let latitude = self.whereDrankCoordinate?.latitude
+        let longitude = self.whereDrankCoordinate?.longitude
+        
+        self.saveImageToFirebase(name: beerName!)
+        
+        let beerNameRef = self.ref.child(beerName!)
+        
+        beerNameRef.setValue(["beer-name" : beerName, "notes-on-beer" : notes ?? "", "location-drank" : location ?? ""])
+        beerNameRef.updateChildValues(["artist-name" : artistName ?? "", "added-by" : addedBy ?? ""])
+        beerNameRef.updateChildValues(["latitude" : latitude ?? 0, "longitude" : longitude ?? 0])
+        
+        
+    }
     
     func saveImageToFirebase(name: String) {
         
@@ -188,93 +261,15 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
         
         uploadTask.observe(.success) { snapshot in
             
-            print("Image uploaded successfully")
+            //            print("Image uploaded successfully")
             
-            beerNameRef.updateChildValues(["image-location" : imageRefPath ?? ""])
+            beerNameRef.updateChildValues(["image-location" : imageRefPath])
             
         }
         
-    } //End of saveImageToFirebase
+    }
     
-    //MARK: - Add beer art method
-    
-    func addBeer() {
-        
-        if let beerName = self.nameOfBeer.text, let notes = self.notesOnBeer.text, let location = self.location.text, let artistName = self.artistName.text {
-                
-                self.newBeer = BeerArt(context: self.context)
-                
-                self.newBeer?.nameOfBeer = beerName
-                
-                self.newBeer?.whereDrank = location
-                
-                self.newBeer?.artistName = artistName
-                
-                self.newBeer?.notes = notes
-                
-                if let latitude = self.whereDrankCoordinate?.latitude {
-                    
-                    if let longitude = self.whereDrankCoordinate?.longitude {
-                        
-                        self.newBeer?.whereLatitude = latitude
-                        
-                        self.newBeer?.whereLongitude = longitude
-                        
-                    }
-                    
-                }
-                
-                self.newBeer?.beerArt = "\(beerName)" + ".jpeg"
-                
-                self.newBeer?.addedBy = self.user?.userName
-            
-                self.newBeer?.imagePath = "images/" + "\(beerName)" + ".jpeg"
-                
-                self.user?.addToArtObjects(self.newBeer!)
-                
-                do {
-                    
-                    try self.context.save()
-                    
-                    print("New beer art saved successfuly")
-                    
-                } catch {
-                    
-                    print("Error saving new beer art item: \(error)")
-                    
-                }
-                
-            }
-        
-    } //end of addBeerArt
-    
-    //MARK: - Save data to Firebase methods
-    
-    func saveToFirebase() {
-        
-        let beerName = self.nameOfBeer.text
-        let notes = self.notesOnBeer.text
-        let location = self.location.text
-        let artistName = self.artistName.text
-        let addedBy = self.user?.userName
-        let latitude = self.whereDrankCoordinate?.latitude
-        let longitude = self.whereDrankCoordinate?.longitude
-    
-        self.saveImageToFirebase(name: beerName!)
-        
-        let beerNameRef = self.ref.child(beerName!)
-            
-        beerNameRef.setValue(["beer-name" : beerName, "notes-on-beer" : notes ?? "", "location-drank" : location ?? ""])
-        beerNameRef.updateChildValues(["artist-name" : artistName ?? "", "added-by" : addedBy ?? ""])
-        beerNameRef.updateChildValues(["latitude" : latitude ?? 0, "longitude" : longitude ?? 0])
-        
-        print("beersavedtodatabase")
-        
-        
-    } //end of SaveToFirebase method
-
-    
-    //MARK: - Prepare for segue methods
+    //MARK: - Prepare for and unwind segue methods
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
@@ -288,8 +283,6 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
         
     }
     
-    //MARK: - Unwind segue method
-    
     @IBAction func unwindToAddArtView(sender: UIStoryboardSegue) {
         
         let sourceVC = sender.source as! MapViewController
@@ -297,7 +290,7 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
         whereDrankCoordinate = sourceVC.whereDrankCoordinate
         
         location.text = sourceVC.locationTitle
-    
+        
     }
     
     //MARK: - Show map and user location methods
@@ -307,8 +300,8 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
         switch CLLocationManager.authorizationStatus() {
             
         case .notDetermined:
-        locationManager.requestWhenInUseAuthorization()
-        break
+            locationManager.requestWhenInUseAuthorization()
+            break
             
         case .denied, .restricted:
             
@@ -331,7 +324,7 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
             getUserLocation()
             
             break
-        
+            
         }
         
     }
@@ -350,7 +343,7 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
         
         locationManager.delegate = nil
         
-        print("Did update locations")
+        //        print("Did update locations")
         
         userCoordinate = locations[0].coordinate
         
@@ -361,8 +354,6 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
     //MARK: - Method to check whether beer name exists locally or in database
     
     func checkIfNameExists(withName: String, completion: @escaping (_ success: Bool) -> ()) {
-        
-        print("Method began")
         
         var nameExists: Bool = false
         
@@ -376,43 +367,39 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
             
             let beer = try self.context.fetch(request)
             
-                if !beer.isEmpty {
+            if !beer.isEmpty {
+                
+                nameExists = true
+                
+            } else {
+                
+                dispatchGroup.enter()
+                
+                self.ref.child(withName).observeSingleEvent(of: .value) { snapshot in
                     
-                    nameExists = true
-                    
-                } else {
-                    
-                    dispatchGroup.enter()
-                    
-                        self.ref.child(withName).observeSingleEvent(of: .value) { snapshot in
-                            
-                            if snapshot.exists() {
-                                
-                                print("This method ran")
-                                
-                                nameExists = true
+                    if snapshot.exists() {
                         
-                            }
-                            
-                            self.dispatchGroup.leave()
-                        }
+                        nameExists = true
+                        
+                    }
                     
+                    self.dispatchGroup.leave()
                 }
-            
-            } catch {
-                    
-                print("Error checking for beer name: \(error)")
-                    
+                
             }
+            
+        } catch {
+            
+            print("Error checking for beer name: \(error)")
+            
+        }
         
         dispatchGroup.notify(queue: .main) {
-        
-            print("We finished")
-        
+            
             completion(nameExists)
             
         }
         
     }
-
+    
 }

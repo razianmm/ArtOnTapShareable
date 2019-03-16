@@ -9,14 +9,13 @@
 import UIKit
 import CoreData
 import FirebaseAuth
-import FirebaseCore
 import FirebaseStorage
 import FirebaseDatabase
 import SVProgressHUD
 
 class DeletionViewController: UIViewController {
     
-    var user: User?
+    //Variables related to Firebase
     
     let userID = Auth.auth().currentUser?.uid
     
@@ -24,24 +23,31 @@ class DeletionViewController: UIViewController {
     
     let ref = Database.database().reference()
     
+    //Variables related to local storage
+    
     let documentsPath = FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask)
     
     let fileManager = FileManager()
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
+    //Other miscellaneous variables
+    
     let dispatchGroup = DispatchGroup()
-
+    
+    var user: User?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
     }
+    
+    //MARK: - Methods for when delete buttons are pressed
     
     @IBAction func deleteAllFromLocalStorage(_ sender: UIButton) {
         
         let alert = UIAlertController(title: "Warning!", message: "This will delete all saved items from lcoal storage. Items saved to online database will persist. Are you sure you wish to contine?", preferredStyle: .alert)
-        
         
         alert.addAction(UIAlertAction(title: "Yes, delete all from local storage", style: .default, handler: { (UIAlertAction) in
             
@@ -84,7 +90,6 @@ class DeletionViewController: UIViewController {
         }))
         
         present(alert, animated: true)
-        
         
     }
     
@@ -140,7 +145,7 @@ class DeletionViewController: UIViewController {
         
     }
     
-    //MARK: - Deletion methods
+    //MARK: - Method to clear all local storage
     
     func deleteAllFromLocalStorageFunction(completion: @escaping (_ success: Int) -> ()) {
         
@@ -164,13 +169,13 @@ class DeletionViewController: UIViewController {
                 
                 beerCount = beerCount - 1
                 
-                print("Beer item deleted from local storage")
+                //                print("Beer item deleted from local storage")
                 
             }
             
             try self.context.save()
             
-            print("context saved")
+            //            print("context saved")
             
         } catch {
             
@@ -180,7 +185,9 @@ class DeletionViewController: UIViewController {
         
         completion(beerCount)
         
-    } // end of function
+    }
+    
+    //MARK: - Method to clear all Firebase data
     
     func deleteAllObjectsFromFirebaseDatabase(completion: @escaping () -> Void) {
         
@@ -204,12 +211,8 @@ class DeletionViewController: UIViewController {
                 
                 if let objectToDelete = beer.nameOfBeer {
                     
-//                    print(objectToDelete)
-//
-//                    print(userID!)
-                    
                     let dataLocation = ref.child(userID!).child(objectToDelete)
-
+                    
                     dataLocation.removeValue()
                     
                 }
@@ -231,31 +234,29 @@ class DeletionViewController: UIViewController {
     func deleteObjectFromFirebaseCloud(object: BeerArt) {
         
         let storageRef = storage.reference()
-            
-            if let fileToDelete = object.imagePath {
-                
-//                print(fileToDelete)
-                
-                let fileRef = storageRef.child(fileToDelete)
-
-                fileRef.delete { error in
-
-                    if let error = error {
-
-                        print("Error deleting file: \(error)")
-
-                    } else {
-
-                        print("Image removed from Cloud Storage successfully")
-
-                    }
-
-                }
-
-            }
         
+        if let fileToDelete = object.imagePath {
+            
+            let fileRef = storageRef.child(fileToDelete)
+            
+            fileRef.delete { error in
+                
+                if let error = error {
+                    
+                    print("Error deleting file: \(error)")
+                    
+                } else {
+                    
+                    //                        print("Image removed from Cloud Storage successfully")
+                    
+                }
+                
+            }
+            
         }
         
+    }
+    
 }
 
 
