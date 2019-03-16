@@ -58,28 +58,28 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         loadBeerArtArray()
         
 //        if artArray.count == 0 {
-//            
+//
 ////            self.tableView.reloadData()
-//            
+//
 //            let alert = UIAlertController(title: "No beers found", message: "No beers were found in local storage, would you like to download saved beers from database?", preferredStyle: .alert)
-//            
+//
 //            alert.addAction(UIAlertAction(title: "Yes, sync with database", style: .default, handler: { (UIAlertAction) in
-//                
+//
 //                self.syncBeerArtArray(download: self.downloadImages)
-//                
-//                
+//
+//
 //            }))
-//            
+//
 //            alert.addAction(UIAlertAction(title: "No, continue locally", style: .default, handler: { (UIAlertAction) in
-//                
+//
 //                alert.dismiss(animated: true, completion: nil)
-//                
+//
 //            }))
-//            
+//
 //            present(alert, animated: true)
-//            
+//
 //        }
-//            
+//
 ////        } else {
 ////
 ////            self.tableView.reloadData()
@@ -174,11 +174,13 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
     
     @IBAction func unwindFromArtDetailsView(sender: UIStoryboardSegue) {
         
-        loadBeerArtArray()
+        
         
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        
+        loadBeerArtArray()
     
         if artArray.count == 0 {
             

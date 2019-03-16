@@ -36,15 +36,19 @@ class GlobeViewController: UIViewController, MKMapViewDelegate {
             
             let longitude = beer.whereLongitude
             
+            if latitude != 0 && longitude != 0 {
+            
             let location = CLLocationCoordinate2DMake(latitude, longitude)
-            
-            let annotation = MKPointAnnotation()
-            
-            annotation.title = beer.nameOfBeer
-            
-            annotation.coordinate = location
-
-            beerCoordinates.append(annotation)
+                
+                let annotation = MKPointAnnotation()
+                
+                annotation.title = beer.nameOfBeer
+                
+                annotation.coordinate = location
+                
+                beerCoordinates.append(annotation)
+                
+            }
             
         }
         

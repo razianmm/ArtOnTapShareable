@@ -248,17 +248,25 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
     
     func saveToFirebase() {
         
-        if let beerName = self.nameOfBeer.text, let notes = self.notesOnBeer.text, let location = self.location.text, let artistName = self.artistName.text, let addedBy = self.user?.userName, let latitude = self.whereDrankCoordinate?.latitude, let longitude = self.whereDrankCoordinate?.longitude {
+        let beerName = self.nameOfBeer.text
+        let notes = self.notesOnBeer.text
+        let location = self.location.text
+        let artistName = self.artistName.text
+        let addedBy = self.user?.userName
+        let latitude = self.whereDrankCoordinate?.latitude
+        let longitude = self.whereDrankCoordinate?.longitude
             
-            self.saveImageToFirebase(name: beerName)
+        self.saveImageToFirebase(name: beerName!)
             
-            let fullImagePath = self.imageRefPath
+        let fullImagePath = self.imageRefPath
             
-            let beerNameRef = self.ref.child(beerName)
+        let beerNameRef = self.ref.child(beerName!)
             
-            beerNameRef.setValue(["beer-name" : beerName, "notes-on-beer" : notes, "location-drank" : location, "artist-name" : artistName, "image-location" : fullImagePath, "added-by" : addedBy, "latitude" : latitude, "longitude" : longitude])
-            
-        }
+        beerNameRef.setValue(["beer-name" : beerName, "notes-on-beer" : notes ?? ""])
+        beerNameRef.setValue(["location-drank" : location ?? "", "artist-name" : artistName ?? "", "image-location" : fullImagePath ?? ""])
+        beerNameRef.setValue(["added-by" : addedBy ?? "", "latitude" : latitude ?? 0, "longitude" : longitude ?? 0])
+        
+        print("beersavedtodatabase")
         
         
     } //end of SaveToFirebase method

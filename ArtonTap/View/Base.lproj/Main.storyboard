@@ -379,20 +379,54 @@
             </objects>
             <point key="canvasLocation" x="2004" y="133.5832083958021"/>
         </scene>
-        <!--View Controller-->
+        <!--Delete-->
         <scene sceneID="KLc-aO-WKu">
             <objects>
-                <viewController id="XuI-kT-xfQ" sceneMemberID="viewController">
+                <viewController id="XuI-kT-xfQ" customClass="DeletionViewController" customModule="ArtonTap" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="sh2-YN-3SM">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lJ9-4z-6Sp">
+                                <rect key="frame" x="75" y="158" width="225" height="75"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Delete ALL from local storage">
+                                    <color key="titleColor" red="1" green="0.088911017159999994" blue="0.140881328" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="deleteAllFromLocalStorage:" destination="XuI-kT-xfQ" eventType="touchUpInside" id="qVq-6d-PSc"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rnA-Gf-bNa">
+                                <rect key="frame" x="81" y="417" width="212" height="75"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Delete ALL from database">
+                                    <color key="titleColor" red="1" green="0.088911017159999994" blue="0.140881328" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="deleteAllFromDatabase:" destination="XuI-kT-xfQ" eventType="touchUpInside" id="3vw-jg-nJ8"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="0fq-ED-cfm" firstAttribute="trailing" secondItem="lJ9-4z-6Sp" secondAttribute="trailing" constant="75" id="6Vf-BW-Hbj"/>
+                            <constraint firstItem="rnA-Gf-bNa" firstAttribute="leading" secondItem="0fq-ED-cfm" secondAttribute="leading" constant="81" id="BTP-0L-OCZ"/>
+                            <constraint firstItem="0fq-ED-cfm" firstAttribute="bottom" secondItem="lJ9-4z-6Sp" secondAttribute="bottom" constant="385" id="Rkg-8g-nD8"/>
+                            <constraint firstItem="rnA-Gf-bNa" firstAttribute="top" secondItem="0fq-ED-cfm" secondAttribute="top" constant="397" id="XJx-xu-f2w"/>
+                            <constraint firstItem="lJ9-4z-6Sp" firstAttribute="leading" secondItem="0fq-ED-cfm" secondAttribute="leading" constant="75" id="YQi-UU-C7y"/>
+                            <constraint firstItem="lJ9-4z-6Sp" firstAttribute="top" secondItem="0fq-ED-cfm" secondAttribute="top" constant="138" id="k8n-DZ-uJg"/>
+                            <constraint firstItem="0fq-ED-cfm" firstAttribute="bottom" secondItem="rnA-Gf-bNa" secondAttribute="bottom" constant="126" id="owJ-BQ-ZED"/>
+                            <constraint firstItem="0fq-ED-cfm" firstAttribute="trailing" secondItem="rnA-Gf-bNa" secondAttribute="trailing" constant="82" id="usM-aH-Vsh"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="0fq-ED-cfm"/>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Delete" image="garbage" selectedImage="garbage" id="YRa-6b-Mva"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1Ov-uR-cJe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1065" y="899"/>
+            <point key="canvasLocation" x="1064.8" y="897.30134932533736"/>
         </scene>
         <!--World-->
         <scene sceneID="hHg-AX-g7y">
@@ -512,6 +546,7 @@
                     <connections>
                         <segue destination="QXu-Oo-4PJ" kind="relationship" relationship="viewControllers" id="2NE-Vy-xGT"/>
                         <segue destination="vTL-Zv-GJn" kind="relationship" relationship="viewControllers" id="znR-qF-JVd"/>
+                        <segue destination="XuI-kT-xfQ" kind="relationship" relationship="viewControllers" id="x1Y-X0-3wN"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4du-cU-gC2" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -521,6 +556,7 @@
     </scenes>
     <resources>
         <image name="earth-usa" width="30" height="30"/>
+        <image name="garbage" width="24" height="24"/>
         <image name="glass" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
