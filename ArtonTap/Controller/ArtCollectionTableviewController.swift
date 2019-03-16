@@ -57,6 +57,35 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         
         loadBeerArtArray()
         
+//        if artArray.count == 0 {
+//            
+////            self.tableView.reloadData()
+//            
+//            let alert = UIAlertController(title: "No beers found", message: "No beers were found in local storage, would you like to download saved beers from database?", preferredStyle: .alert)
+//            
+//            alert.addAction(UIAlertAction(title: "Yes, sync with database", style: .default, handler: { (UIAlertAction) in
+//                
+//                self.syncBeerArtArray(download: self.downloadImages)
+//                
+//                
+//            }))
+//            
+//            alert.addAction(UIAlertAction(title: "No, continue locally", style: .default, handler: { (UIAlertAction) in
+//                
+//                alert.dismiss(animated: true, completion: nil)
+//                
+//            }))
+//            
+//            present(alert, animated: true)
+//            
+//        }
+//            
+////        } else {
+////
+////            self.tableView.reloadData()
+////
+////        }
+        
         let worldVC = self.tabBarController?.viewControllers?[1] as! GlobeViewController
         
         worldVC.user = user
@@ -149,6 +178,33 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+    
+        if artArray.count == 0 {
+            
+            //            self.tableView.reloadData()
+            
+            let alert = UIAlertController(title: "No beers found", message: "No beers were found in local storage, would you like to download saved beers from database?", preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: "Yes, sync with database", style: .default, handler: { (UIAlertAction) in
+                
+                self.syncBeerArtArray(download: self.downloadImages)
+                
+                
+            }))
+            
+            alert.addAction(UIAlertAction(title: "No, continue locally", style: .default, handler: { (UIAlertAction) in
+                
+                alert.dismiss(animated: true, completion: nil)
+                
+            }))
+            
+            present(alert, animated: true)
+            
+        }
+        
+    }
+    
     //MARK: - Methods to add an image
 
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
@@ -194,23 +250,7 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
                     
                     artArray = try self.context.fetch(request)
                     
-                    if artArray.count == 0 {
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        self.tableView.reloadData()
-                        
-                        syncBeerArtArray(download: downloadImages)
-                        
-                    } else {
-                        
-                        self.tableView.reloadData()
-                        
-                    }
+                    self.tableView.reloadData()
                     
                 } catch {
                     
