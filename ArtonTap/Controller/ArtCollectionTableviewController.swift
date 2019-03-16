@@ -90,6 +90,10 @@ class ArtCollectionTableViewController: UITableViewController, UIImagePickerCont
         
         worldVC.user = user
         
+        let deletionVC = self.tabBarController?.viewControllers?[2] as! DeletionViewController
+        
+        deletionVC.user = user
+        
     }
     
     //MARK: - TableView Delegate Methods

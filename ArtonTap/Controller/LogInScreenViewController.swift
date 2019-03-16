@@ -28,6 +28,12 @@ class LogInScreenViewController: UIViewController {
         
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        self.view.endEditing(true)
+        
+    }
+    
     //MARK: - Log In method
     
     @IBAction func logInButtonPressed(_ sender: UIButton) {

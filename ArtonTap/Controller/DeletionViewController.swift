@@ -16,6 +16,8 @@ import SVProgressHUD
 
 class DeletionViewController: UIViewController {
     
+    var user: User?
+    
     let userID = Auth.auth().currentUser?.uid
     
     let storage = Storage.storage()
@@ -184,7 +186,13 @@ class DeletionViewController: UIViewController {
         
         SVProgressHUD.show()
         
+        let name = user?.userName
+        
         let request: NSFetchRequest<BeerArt> = BeerArt.fetchRequest()
+        
+        let predicate = NSPredicate(format: "addedBy == %@", name!)
+        
+        request.predicate = predicate
         
         do {
             
@@ -196,8 +204,12 @@ class DeletionViewController: UIViewController {
                 
                 if let objectToDelete = beer.nameOfBeer {
                     
-                    let dataLocation = ref.child(userID!).child(objectToDelete)
+//                    print(objectToDelete)
+//
+//                    print(userID!)
                     
+                    let dataLocation = ref.child(userID!).child(objectToDelete)
+
                     dataLocation.removeValue()
                     
                 }
@@ -222,25 +234,28 @@ class DeletionViewController: UIViewController {
             
             if let fileToDelete = object.imagePath {
                 
+//                print(fileToDelete)
+                
                 let fileRef = storageRef.child(fileToDelete)
-                
+
                 fileRef.delete { error in
-                    
+
                     if let error = error {
-                        
+
                         print("Error deleting file: \(error)")
-                        
+
                     } else {
-                        
+
                         print("Image removed from Cloud Storage successfully")
-                        
+
                     }
-                    
+
                 }
-                
+
             }
-            
+        
         }
         
 }
+
 

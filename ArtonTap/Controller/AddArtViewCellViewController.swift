@@ -25,8 +25,6 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
     
     var ref = Database.database().reference(withPath: (Auth.auth().currentUser?.uid)!)
     
-    var imageRefPath: String?
-    
     var storage = Storage.storage()
     
 //    var doesNameAlreadyExist: Bool = false
@@ -176,9 +174,13 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
         
         let file = name + ".jpeg"
         
+        let beerNameRef = self.ref.child(name)
+        
         let storageRef = storage.reference()
         
         let imagesRef = storageRef.child("images").child(file)
+        
+        let imageRefPath = imagesRef.fullPath
         
         let filePathToSave = documentsPath[0].appendingPathComponent(file)
         
@@ -188,7 +190,7 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
             
             print("Image uploaded successfully")
             
-            self.imageRefPath = imagesRef.fullPath
+            beerNameRef.updateChildValues(["image-location" : imageRefPath ?? ""])
             
         }
         
@@ -225,6 +227,8 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
                 self.newBeer?.beerArt = "\(beerName)" + ".jpeg"
                 
                 self.newBeer?.addedBy = self.user?.userName
+            
+                self.newBeer?.imagePath = "images/" + "\(beerName)" + ".jpeg"
                 
                 self.user?.addToArtObjects(self.newBeer!)
                 
@@ -255,16 +259,14 @@ class AddArtViewCellViewController: UIViewController, CLLocationManagerDelegate 
         let addedBy = self.user?.userName
         let latitude = self.whereDrankCoordinate?.latitude
         let longitude = self.whereDrankCoordinate?.longitude
-            
+    
         self.saveImageToFirebase(name: beerName!)
-            
-        let fullImagePath = self.imageRefPath
-            
+        
         let beerNameRef = self.ref.child(beerName!)
             
-        beerNameRef.setValue(["beer-name" : beerName, "notes-on-beer" : notes ?? ""])
-        beerNameRef.setValue(["location-drank" : location ?? "", "artist-name" : artistName ?? "", "image-location" : fullImagePath ?? ""])
-        beerNameRef.setValue(["added-by" : addedBy ?? "", "latitude" : latitude ?? 0, "longitude" : longitude ?? 0])
+        beerNameRef.setValue(["beer-name" : beerName, "notes-on-beer" : notes ?? "", "location-drank" : location ?? ""])
+        beerNameRef.updateChildValues(["artist-name" : artistName ?? "", "added-by" : addedBy ?? ""])
+        beerNameRef.updateChildValues(["latitude" : latitude ?? 0, "longitude" : longitude ?? 0])
         
         print("beersavedtodatabase")
         
