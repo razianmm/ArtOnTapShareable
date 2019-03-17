@@ -45,7 +45,7 @@ As I mentioned, this project is meant to tick a lot of boxes in terms of hireabl
 
 How it works:
 
-The user signs up to a Firebase database with an e-mail address and password by tapping the ‘Sign Up’ button. They are then taken to a TableView which presents their saved beer art, with an option to sync to the database and retrieve previously saved beer art in case of a fresh app install.
+The user signs up to a Firebase database with any e-mail address and password by tapping the ‘Sign Up’ button. They are then taken to a TableView which presents their saved beer art, with an option to sync to the database and retrieve previously saved beer art in case of a fresh app install.
 
 By tapping the add button in the Navigation Bar, the user can use their devices camera to capture photos of art, and annotate them with certain data. These include using MapKit to find the user’s current location or add custom locations of which to keep track. When the art is added to the app, it is then displayed in the previously mentioned TableView, through which the user can tap on a TableView cell to view the art in more detail, and delete the art either locally or both locally and from the database.
 
