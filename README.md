@@ -5,7 +5,7 @@ Hello!
 
 Welcome to my app!
 
-I am a junior-level iOS developer, and this project is meant to showcase some of the skills I’ve learnt since embarking on this career path. I hope to contribute these to any future project of which I am a part, and of course to continue learning new skills and best practices along the way.
+I am an iOS developer, and this project is meant to showcase some of the skills I’ve learnt since embarking on this career path. I hope to contribute these to any future project of which I am a part, and of course to continue learning new skills and best practices along the way.
 
 About the app:
 
